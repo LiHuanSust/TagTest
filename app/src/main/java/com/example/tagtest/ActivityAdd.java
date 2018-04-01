@@ -6,13 +6,29 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class ActivityAdd extends AppCompatActivity {
+import java.util.ArrayList;
 
+public class ActivityAdd extends AppCompatActivity{
+
+    protected Button button1;
+    private Button button2;
+    private Button button3;
+    private Button button4;
+    private Button button5;
+    private Button button6;
+    private Button button7;
+    private Button button8;
+    private Button button9;
+    private Button button10;
+    private Button button11;
+    private Button button12;
     private Toolbar toolbar;
     private TextView costAdd;
     private TextView salaryAdd;
+    private ArrayList<Button> button_list=null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,8 +51,9 @@ public class ActivityAdd extends AppCompatActivity {
         FragmentCost f=new FragmentCost();
         fragmentTransaction.replace(R.id.layout_bottom,f);
         fragmentTransaction.commit();
-
         setFragment();
+        button_list=new ArrayList<>();
+        //showFirst();
     }
     public void selected()
     {
@@ -62,6 +79,7 @@ public class ActivityAdd extends AppCompatActivity {
                 fragmentTransaction.replace(R.id.layout_bottom,f);
                 fragmentTransaction.commit();
                 costAdd.setSelected(true);
+                //
             }
         });
         salaryAdd.setOnClickListener(new View.OnClickListener()

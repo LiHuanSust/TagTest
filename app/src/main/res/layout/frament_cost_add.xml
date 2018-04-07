@@ -157,12 +157,35 @@
                 />
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="付款方式："
+
+            />
+
+        <Spinner
+            android:id="@+id/spinner_cost_type"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:entries="@array/apply_type"
+            android:spinnerMode="dialog" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:focusable="true"
         android:focusableInTouchMode="true">
         <TextView
@@ -181,44 +204,25 @@
             />
 
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        >
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="付款方式："
-            android:gravity="center_horizontal"
 
-            />
-        <Spinner
-            android:id="@+id/spinner_cost_type"
-           android:entries="@array/apply_type"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:spinnerMode="dialog"
-            />
-    </LinearLayout>
     <LinearLayout
+        android:id="@+id/bank_card_select"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="2"
-        android:id="@+id/bank_card_select"
-        android:visibility="gone"
+        android:visibility="invisible"
        >
+
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="银行卡选择："
             android:gravity="center_horizontal"
+            android:text="银行卡选择："
 
             />
         <Spinner
             android:id="@+id/spinner_bank_select"
-            android:entries="@array/apply_type"
+            android:entries="@array/bank_type"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"

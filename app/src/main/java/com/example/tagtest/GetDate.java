@@ -7,12 +7,12 @@ import java.util.Calendar;
  * add data for year,month,day,hour,minute,second
  */
 
-public class GetData {
+public class GetDate {
     private int year;
     private int month;
     private int day;
     private Calendar calendar;
-    public GetData()
+    public GetDate()
     {
         calendar=Calendar.getInstance();
     }
@@ -30,7 +30,7 @@ public class GetData {
     }
     public int getHour()
     {
-        return calendar.get(Calendar.HOUR);
+        return calendar.get(Calendar.HOUR_OF_DAY);
     }
     public int getMinutes()
     {
@@ -40,13 +40,18 @@ public class GetData {
     {
         return calendar.get(Calendar.SECOND);
     }
-    public String partToString()
+    public String partToString()  //年月日 String化
     {
-        return ""+calendar.get(Calendar.YEAR)+" "+calendar.get(Calendar.MONTH)+1+" "+calendar.get(Calendar.DATE);
+        int month=calendar.get(Calendar.MONTH)+1;
+        return calendar.get(Calendar.YEAR)+","+ month+","+calendar.get(Calendar.DATE);
     }
-    public String allToString()
+    public String hourMinuteSecondString() //时，分，秒 String化
     {
-        return partToString()+" "+calendar.get(Calendar.HOUR)+" "+calendar.get(Calendar.MINUTE)+" "+calendar.get(Calendar.SECOND);
+        return getHour()+":"+getMinutes()+":"+getSeconds();
+    }
+    public String allToString() //年月日，时分秒 String化
+    {
+        return partToString()+","+hourMinuteSecondString();
     }
 
 }

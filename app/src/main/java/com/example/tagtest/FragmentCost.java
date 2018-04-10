@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -19,10 +20,9 @@ import java.util.ArrayList;
  */
 
 public class FragmentCost extends Fragment implements View.OnClickListener{
-    private TextView cost_type;
-    private EditText cost_money;
-    private EditText cost_remarks;
-    protected Spinner spinner_card_select;//银行卡下拉框
+    private TextView cost_type=null;
+    private EditText cost_money=null;
+    private EditText cost_remarks=null;
     protected LinearLayout bank_card_layout;
     private Button button_1;
     private Button button_2;
@@ -39,10 +39,11 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
     private Button saveButton; //保存按钮
     private Button clearButton;//清空按钮
     protected Spinner spinner_cost_type; //消费类型下拉框
+    protected Spinner spinner_bank_type; //银行下拉框
     private ArrayList<Button> list_button=null;
     public String cost_type_value=null;
     private String bank_select_value=null;
-    private String costMoney=null;
+    private boolean flag=false;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup contain, Bundle bundle)
@@ -82,6 +83,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         cost_money=getActivity().findViewById(R.id.cost_money); //消费金额，TextView
         spinner_cost_type=(Spinner) getActivity().findViewById(R.id.spinner_cost_type);//消费类型选择，Spinner
         bank_card_layout=(LinearLayout)getActivity().findViewById(R.id.bank_card_select);//银行卡选择，Spinner
+        spinner_bank_type=(Spinner)getActivity().findViewById(R.id.spinner_bank_select);
 
         list_button.add(button_1);
         list_button.add(button_2);
@@ -101,6 +103,8 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         {
             button.setOnClickListener(this);
         }
+        button_1.setSelected(true);
+        cost_type.setText(button_1.getText().toString());
     }
     public void costTypeSelect()
     {
@@ -114,8 +118,11 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
                 {
                    bankCardSelected();
                    // Toast.makeText(getActivity(),(spinner_card_select.getVisibility())+" ",Toast.LENGTH_SHORT).show();
-
-
+                }
+                else
+                {
+                    spinner_bank_type.setSelection(0);
+                    bank_select_value="";
                 }
             }
             @Override
@@ -128,8 +135,10 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
     {
         bank_card_layout=(LinearLayout)getActivity().findViewById(R.id.bank_card_select);
         bank_card_layout.setVisibility(View.VISIBLE);
-        spinner_card_select=(Spinner)getActivity().findViewById(R.id.spinner_bank_select);
-        spinner_card_select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        spinner_bank_type=(Spinner)getActivity().findViewById(R.id.spinner_bank_select);
+        spinner_bank_type.setSelection(0);
+        bank_select_value=spinner_bank_type.getItemAtPosition(0).toString();
+        spinner_bank_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 bank_select_value=adapterView.getItemAtPosition(i).toString();
@@ -140,6 +149,17 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
 
             }
         });
+
+    }
+    public void clearValue() //清空所有内容
+    {
+        cost_type.setText(button_1.getText().toString());
+        setNotSelected();
+        button_1.setSelected(true);
+        cost_money.setText("");
+        cost_remarks.setText("");
+        spinner_cost_type.setSelection(0);
+        bank_card_layout.setVisibility(View.GONE);
 
     }
     @Override
@@ -208,16 +228,47 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
                 button_12.setSelected(true);
                 break;
             case R.id.cost_add_cancel:
-                cost_type.setText(button_1.getText().toString());
-                setNotSelected();
-                button_1.setSelected(true);
-                cost_money.setText("");
-                cost_remarks.setText("");
-                spinner_cost_type.setSelection(0);
-                bank_card_layout.setVisibility(View.GONE);
+                clearValue();
                 break;
             case R.id.cost_add_save:
-
+                String costMoneyValue=cost_money.getText().toString();
+                if(!cost_type_value.equals("")  && !costMoneyValue.equals(""))
+                {
+                    //DataSupport.deleteAll(MyDate.class);
+                    flag=true;
+                    String typeSelect=cost_type.getText().toString(); //消费类型
+                    String solution=cost_type_value; //付款类型
+                    String bankCard=bank_select_value;
+                    String remarks=cost_remarks.getText().toString();
+                    GetDate dateNow=new GetDate();
+                    int year=dateNow.getYear();
+                    int month=dateNow.getMonth();
+                    int day=dateNow.getDay();
+                    String hourMinuteSecond=dateNow.hourMinuteSecondString();
+                   // BigDecimal costMoney=new BigDecimal(costMoneyValue); //java提供的专门用于精确计算的类
+                    //costMoney.setScale(2,BigDecimal.ROUND_HALF_UP); //四舍五入，小数保留两位
+                    float costMoney=Float.parseFloat(costMoneyValue);
+                    MyData newDate=new MyData("lihuan1994",true,typeSelect,solution,year,month,day,hourMinuteSecond,costMoney,bankCard,remarks);
+                   if(newDate.save()) {
+                       Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+                       clearValue();
+                   }
+                   else
+                   {
+                       Toast.makeText(getContext(), "添加失败", Toast.LENGTH_SHORT).show();
+                   }
+                   // Toast.makeText(getContext(),"save successful",Toast.LENGTH_SHORT).show();
+                  /* List<MyDate> list= DataSupport.findAll(MyDate.class);
+                   for(MyDate date:list)
+                   {
+                      // Toast.makeText(getContext(),date.toString(),Toast.LENGTH_SHORT).show();
+                     // Log.d("MainActivityTest",date.getData());
+                       cost_remarks.append(date.toString());
+                   }*/
+                }
+                else
+                    Toast.makeText(getContext(),"请将数据填写完整",Toast.LENGTH_SHORT).show();
+                 break;
 
                 default:
                     break;

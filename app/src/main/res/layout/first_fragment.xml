@@ -2,15 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/text_content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="我是第一个fragment"
-        android:textColor="#99FFFF"
-        android:textSize="20sp"
+    <include layout="@layout/layout_main_top_show"/>
 
-        />
+    <include layout="@layout/layout_main_list"></include>
 
 </LinearLayout>

@@ -7,11 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -21,37 +17,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tabMore;
     private TextView tabUser;
     //add data
-    private List<MyDate> list=new ArrayList<>();
-    private TextView dataShow;
     private FragmentManager fragmentManager;
     private MyFragmet1 myFragmet1;
     private  MyFrgment2 myFrgment2;
     private MyFragment3 myFragment3;
     private MyFragment4 myFragment4;
-    private  TextView addTextView;
+ //   private boolean flag=false; //判断需不需要重新加载数据
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dataShow=(TextView)findViewById(R.id.data);
-        GetData data=new GetData();
-        dataShow.setText(data.partToString());
+
         bindView();
-        initeDate();
+        getFragment(1);
+     //   initeDate();
     }
-    private void initeDate()
+   /* @Override
+    protected void onActivityResult(int requestCode,int resultCode,Intent data)
     {
-      for(int i=0;i<10;i++)
-      {
-          MyDate date=new MyDate("早餐","","10");
-          list.add(date);
-      }
-      DateAdapter adapter=new DateAdapter(MainActivity.this,R.layout.layout_date_show,list);
+        switch (requestCode)
+        {
+            case 1:
+                if(resultCode==RESULT_CANCELED)
+                {
+                    flag=data.getBooleanExtra("IsCostAdd",false);
+                }
+                break;
+
+        }
+    }*/
+    @Override
+    protected  void onRestart()
+    {
+        super.onRestart();
+        //getFragment(1);
+
+         /*   ListView list=(ListView)findViewById(R.id.list_view_day);
+            List<MyDate> myDateByDay=DataSupport.findAll(MyDate.class);
+
+            DateAdapter adapter=new DateAdapter(MainActivity.this,R.layout.layout_date_show,myDateByDay);
+            ListView listView=(ListView)findViewById(R.id.show_today);
+            listView.setAdapter(adapter);*/
+    }
+  /*  private void initeDate()
+    {
+        GetData time_now=new GetData();
+        String time_part=time_now.getYear()+","+time_now.getMonth()+","+time_now.getDay();
+      //  List<MyDate> myDateByDay=DataSupport.where("data like ?",time_part+"%").find(MyDate.class);
+       List<MyDate> myDateByDay=DataSupport.findAll(MyDate.class);
+
+        DateAdapter adapter=new DateAdapter(MainActivity.this,R.layout.layout_date_show,myDateByDay);
         ListView listView=(ListView)findViewById(R.id.show_today);
         listView.setAdapter(adapter);
 
 
-    }
+    }*/
     private void bindView()
     {
         //topBar=(TextView)this.findViewById(R.id.txt_top);
@@ -59,13 +79,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tabPoi=(TextView)findViewById(R.id.txt_poi);
         tabMore=(TextView)findViewById(R.id.txt_more);
         tabUser=(TextView)findViewById(R.id.txt_user);
-        addTextView=(TextView)findViewById(R.id.add);
+        //cost_today=(TextView)findViewById();
 //        topBar.setOnClickListener(this);
         tabDeal.setOnClickListener(this);
         tabPoi.setOnClickListener(this);
         tabMore.setOnClickListener(this);
         tabUser.setOnClickListener(this);
-        addTextView.setOnClickListener(this);
+        //addTextView.setOnClickListener(this);
     }
     public void selected()
     {

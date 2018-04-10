@@ -29,6 +29,8 @@ public class ActivityAdd extends AppCompatActivity{
     private TextView costAdd;
     private TextView salaryAdd;
     private ArrayList<Button> button_list=null;
+    //private boolean flagCostIsAdd=false;
+    //private boolean flagSalaryIsAdd=false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -43,6 +45,11 @@ public class ActivityAdd extends AppCompatActivity{
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {  //事件
             @Override
             public void onClick(View view) {
+
+             //   Intent intent=new Intent();
+               // intent.putExtra("IsCostAdd",flagCostIsAdd);
+                //intent.putExtra("IsSalaryAdd",flagSalaryIsAdd);
+                //setResult(RESULT_OK,intent);
                 finish();
             }
         });

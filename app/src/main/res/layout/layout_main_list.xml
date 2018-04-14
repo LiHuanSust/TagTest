@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="10dp">
    <ListView
+       android:layout_marginTop="20dp"
        android:id="@+id/list_today_data"
        android:layout_width="match_parent"
        android:layout_height="match_parent"

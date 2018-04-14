@@ -5,9 +5,16 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import org.litepal.tablemanager.Connector;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -22,13 +29,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private  MyFrgment2 myFrgment2;
     private MyFragment3 myFragment3;
     private MyFragment4 myFragment4;
+    private DrawerLayout drawerLayout;
+    private Toolbar toolbar;
  //   private boolean flag=false; //判断需不需要重新加载数据
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Connector.getDatabase();
 
         bindView();
+        tabDeal.setSelected(true);
         getFragment(1);
      //   initeDate();
     }
@@ -47,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }*/
     @Override
-    protected  void onRestart()
+    protected  void onRestart()  //重新启动的时候，暂且不做什么
     {
         super.onRestart();
         //getFragment(1);
@@ -85,6 +96,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tabPoi.setOnClickListener(this);
         tabMore.setOnClickListener(this);
         tabUser.setOnClickListener(this);
+        toolbar=(Toolbar)findViewById(R.id.toolbar);
+        drawerLayout=(DrawerLayout)findViewById(R.id.drawer_layout);
+        setSupportActionBar(toolbar);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.setNavigationIcon(R.drawable.category);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                drawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
+
+
         //addTextView.setOnClickListener(this);
     }
     public void selected()
@@ -95,6 +121,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tabMore.setSelected(false);
         tabUser.setSelected(false);
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu,menu);
+        return true;
+    }
+
     @Override
     public void onClick(View v)
     {
@@ -156,4 +189,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             fragmentTransaction.commit();
         }
     }
-}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.add:
+                Intent intent=new Intent(MainActivity.this,ActivityAdd.class);
+                startActivity(intent);
+                break;
+            case R.id.exit:
+                finish();
+                break;
+            case  R.id.search:
+                break;
+            default:
+        }
+        return true;
+    }
+
+    }
+

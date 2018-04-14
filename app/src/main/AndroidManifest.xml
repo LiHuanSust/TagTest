@@ -12,7 +12,8 @@
         android:theme="@style/AppCompatTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppCompatTheme">
+            android:theme="@style/AppCompatTheme"
+            android:label="My application">
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,12 +24,11 @@
         <activity
             android:name=".ToolBarTest"
             android:theme="@style/AppCompatTheme" />
-        <activity android:name=".ActivityAdd"></activity>
+        <activity android:name=".ActivityAdd" />
         <activity
             android:name=".ListShowCompleteData"
-            android:theme="@style/AppCompatTheme">
-
-        </activity>
+            android:theme="@style/AppCompatTheme"></activity>
+        <activity android:name=".Alert_value"></activity>
     </application>
 
 </manifest>

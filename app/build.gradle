@@ -25,5 +25,11 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    //LitePal 依赖
     compile 'org.litepal.android:core:1.6.1'
+    //图片圆形化处理
+    compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.chanven.lib:cptr:1.0.0'
+
 }

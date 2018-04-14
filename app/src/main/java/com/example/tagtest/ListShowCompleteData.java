@@ -1,13 +1,18 @@
 package com.example.tagtest;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ListShowCompleteData extends AppCompatActivity {
+import org.litepal.crud.DataSupport;
+
+public class ListShowCompleteData extends AppCompatActivity implements View.OnClickListener{
     private TextView typeValue; //标题栏
     private TextView dateValue; //时间显示
     private TextView moneyValue; //金额显示
@@ -16,7 +21,10 @@ public class ListShowCompleteData extends AppCompatActivity {
     private TextView remarksValue; //备注
     private ImageView pictureValue; //图片资源
     private TextView picTextValue; //图片文字
-    private Toolbar toolbar;
+    private Toolbar toolbar;  //顶部toolbar
+    private Button buttonAlert; //修改按钮
+    private Button buttonDrop; //删除按钮
+    private MyData data;  //当前data详情
 
 
     @Override
@@ -24,6 +32,7 @@ public class ListShowCompleteData extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_show_complete_data);
         initialise();
+        setListener();
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true); //设置返回键
@@ -38,7 +47,32 @@ public class ListShowCompleteData extends AppCompatActivity {
                 finish();
             }
         });
-        Bundle bundle=getIntent().getExtras();
+        data=(MyData)getIntent().getSerializableExtra("Infor");
+        if(data!=null && data.getType()==true)
+        {
+            typeValue.setText("消费详情");
+        }
+        else
+        {
+            typeValue.setText("收入详情");
+        }
+        dateValue.setText(data.dateToString());
+        moneyValue.setText(data.getMoney()+"");
+        payValue.setText(data.getSolution());
+        if(data.getBank()!=null && !data.getBank().equals(""))
+        {
+            cardValue.setText(data.getBank());
+        }
+        else
+        {
+            cardValue.setText("无银行卡消费记录");
+        }
+        payValue.setText(data.getSolution());
+        remarksValue.setText("    "+data.getRemarks());
+        String picSelected=data.getTypeSelect();
+        picTextValue.setText(picSelected);
+     //   setPicture(picSelected);
+       /* Bundle bundle=getIntent().getExtras();
         typeValue.setText(bundle.getString("Type"));
         dateValue.setText(bundle.getString("Date"));
         moneyValue.setText(bundle.getString("Money"));
@@ -46,6 +80,8 @@ public class ListShowCompleteData extends AppCompatActivity {
         cardValue.setText(bundle.getString("CardInfo"));
         remarksValue.setText(bundle.getString("Remarks"));
        String picSelected=bundle.getString("TypeSelect");
+       dataNow=new MyData();
+
         switch(picSelected)
         {
             case "早餐":
@@ -100,7 +136,7 @@ public class ListShowCompleteData extends AppCompatActivity {
                  break;
 
 
-        }
+        }*/
     }
     public void initialise()
     {
@@ -113,6 +149,106 @@ public class ListShowCompleteData extends AppCompatActivity {
         pictureValue=findViewById(R.id.picture_info);
         picTextValue=findViewById(R.id.picture_text_info);
         remarksValue=findViewById(R.id.remakrs_info);
+        buttonAlert=findViewById(R.id.button_alert);
+        buttonDrop=findViewById(R.id.button_drop);
 
     }
+    public void setListener()
+    {
+        buttonAlert.setOnClickListener(this);
+        buttonDrop.setOnClickListener(this);
+    }
+    public void setPicture(final String selected)
+    {
+        if(selected.equals("早餐"))
+        {
+            pictureValue.setImageResource(R.drawable.breakfast); //早餐图片
+        }
+        else if(selected.equals("午餐"))
+        {
+            pictureValue.setImageResource(R.drawable.lunch);  //午餐图片
+        }
+        else if(selected.equals("晚餐"))
+        {
+            pictureValue.setImageResource(R.drawable.dinner);
+        }
+        else if(selected.equals("烟酒"))
+        {
+            pictureValue.setImageResource(R.drawable.wine);
+        }
+        else if(selected.equals("零食"))
+        {
+            pictureValue.setImageResource(R.drawable.snack);
+        }
+        else if(selected.equals("水果")) {
+            pictureValue.setImageResource(R.drawable.fruit);
+        }
+        else if(selected.equals("酒店"))
+        {
+            pictureValue.setImageResource(R.drawable.hotel);
+        }
+        else if(selected.equals("买菜"))
+        {
+            pictureValue.setImageResource(R.drawable.shopping);
+        }
+        else if(selected.equals("化妆品"))
+        {
+            pictureValue.setImageResource(R.drawable.cosmetic);
+        }
+        else if(selected.equals("旅行"))
+        {
+            pictureValue.setImageResource(R.drawable.trip);
+        }
+        else if(selected.equals("租房"))
+        {
+            pictureValue.setImageResource(R.drawable.tenant);
+        }
+        else if(selected.equals("饮品"))
+        {
+            pictureValue.setImageResource(R.drawable.drink);
+        }
+        else
+            return;
+
+    }
+    @Override
+    public void onClick(View v)
+    {
+       /* boolean type=data.getType();
+        String date=data.dateToString();
+        String money=data.getMoney()+"";
+        String solution=data.getSolution();
+        String bank=data.getBank();
+        String remarks=data.getRemarks();
+
+
+
+
+        MyData data=new MyData();*/
+        switch (v.getId())
+        {
+            case R.id.button_alert:
+                Bundle bundle=new Bundle();
+                bundle.putSerializable("Infor",data);
+                if(data.getType())
+                {
+                    Intent intent=new Intent(ListShowCompleteData.this,Alert_value.class);
+                    intent.putExtras(bundle);
+                    finish();
+                    startActivity(intent);
+                    break;
+                }
+            case R.id.button_drop:
+              //  Toast.makeText(this,"hello+ "+data.getId(),Toast.LENGTH_SHORT).show();
+                DataSupport.delete(MyData.class,data.getId());
+                Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
+                //写个弹窗确认吧。。
+                break;
+
+                //DataSupport.deleteAll(MyData.class,"")
+
+        }
+
+    }
+
 }

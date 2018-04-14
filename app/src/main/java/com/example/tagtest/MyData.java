@@ -2,12 +2,15 @@ package com.example.tagtest;
 
 import org.litepal.crud.DataSupport;
 
+import java.io.Serializable;
+
 /**
  * Created by MyFirstPC on 2018/3/27.
  */
 
-public class MyData extends DataSupport {
-    private String user; //用户id
+public class MyData extends DataSupport implements Serializable{
+    private static final long serialVersionUID=1L; // 设置序列化id
+    private transient String user; //用户名；不用被序列化
     private boolean type; //消费或收入的标识 当type为true表示支出，当为false表示收入
     private String typeSelect; //消费或收入的具体类别
     private String solution; //付款方式或收入方式
@@ -17,7 +20,8 @@ public class MyData extends DataSupport {
     private String hourMinuteSecond; //时分秒的字符串形式
     private float money;//具体金额,
     private String bank; //银行选择
-    private String remarks;
+    private String remarks; //备注
+    private long id; //加id是为了方便进行查找，删除，注意：此处即使加了id，并重新加了值，进入数据库中还是会变主键id的值
    /* public MyData(String user,boolean type,String typeSelect,String hourMinuteSecond,float money)
     {
         this.user=user;
@@ -28,6 +32,7 @@ public class MyData extends DataSupport {
     {}
     public MyData(String user,boolean type,String typeSelect,String solution,int year,int month,int day,String hourMinuteSecond,float money,String bank,String remarks) //此接口是数据库存储调用
     {
+        id=0L;
         this.user=user;
         this.type=type;
         this.typeSelect=typeSelect;
@@ -76,6 +81,7 @@ public class MyData extends DataSupport {
     {
         return remarks;
     }
+    public long getId(){return id;}
     public void setUser(String user)
     {
         this.user=user;

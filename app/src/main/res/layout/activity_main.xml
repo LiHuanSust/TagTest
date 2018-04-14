@@ -1,63 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/drawer_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+<RelativeLayout
     android:layout_width="match_parent" android:layout_height="match_parent"
     android:orientation="vertical">
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_alignParentTop="true">
+         <include layout="@layout/toolbar"></include>
+
+
+    </LinearLayout>
+    <LinearLayout
         android:id="@+id/tab_menu"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         >
-        <TextView
-            android:id="@+id/txt_deal"
+
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:drawableTop="@mipmap/ic_launcher"
-            android:gravity="center"
-            android:textColor="@drawable/tab_menu_deal_text"
-            android:text="点餐"
-            />
-        <TextView
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_deal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:drawableTop="@drawable/button_home_style"
+                android:text="主页"
+                android:gravity="center_horizontal"
+                android:textColor="@drawable/tab_menu_deal_text" />
+
+        </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+    <TextView
             android:id="@+id/txt_poi"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:drawableTop="@mipmap/ic_launcher"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/button_value_style"
+            android:layout_gravity="center_horizontal"
             android:textColor="@drawable/tab_menu_deal_text"
-            android:text="商铺"
+            android:text="详情"
+        android:gravity="center_horizontal"
             />
-        <TextView
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+    <TextView
             android:id="@+id/txt_user"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:drawableTop="@mipmap/ic_launcher"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/button_account_style"
+            android:layout_gravity="center"
             android:textColor="@drawable/tab_menu_deal_text"
-            android:text="用户"
+            android:text="账户"
+        android:gravity="center_horizontal"
             />
-        <TextView
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+    <TextView
             android:id="@+id/txt_more"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:background="@drawable/tab_menu_bg"
-            android:drawablePadding="3dp"
-            android:drawableTop="@mipmap/ic_launcher"
-            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableTop="@drawable/button_more_style"
+            android:layout_gravity="center_horizontal"
             android:textColor="@drawable/tab_menu_deal_text"
             android:text="更多"
+            android:gravity="center_horizontal"
             />
-
+    </LinearLayout>
     </LinearLayout>
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -66,3 +103,12 @@
         android:layout_above="@id/tab_menu">
     </FrameLayout>
 </RelativeLayout>
+    <android.support.design.widget.NavigationView
+        android:id="@+id/drawer_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="left"
+        app:menu="@menu/drawer_layout_menu"
+        app:headerLayout="@layout/drawer_layout_head"
+        />
+</android.support.v4.widget.DrawerLayout>

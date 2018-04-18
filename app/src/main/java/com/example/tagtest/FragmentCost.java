@@ -13,7 +13,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by MyFirstPC on 2018/3/27.
@@ -21,6 +27,7 @@ import java.util.ArrayList;
 
 public class FragmentCost extends Fragment implements View.OnClickListener{
     private TextView cost_type=null;
+    private TextView dateNow=null;
     private EditText cost_money=null;
     private EditText cost_remarks=null;
     protected LinearLayout bank_card_layout;
@@ -44,6 +51,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
     public String cost_type_value=null;
     private String bank_select_value=null;
     private boolean flag=false;
+    private GetDate myDate;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup contain, Bundle bundle)
@@ -63,6 +71,9 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
     }
     public void initialise()  //把所有按钮加入到ArrayList中
     {
+        myDate=new GetDate();
+        dateNow=getActivity().findViewById(R.id.time_now);
+        dateNow.setOnClickListener(this);
         list_button=new ArrayList<>();
         button_1=getActivity().findViewById(R.id.button1);
         button_2=getActivity().findViewById(R.id.button2);
@@ -105,6 +116,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         }
         button_1.setSelected(true);
         cost_type.setText(button_1.getText().toString());
+        dateNow.setText(myDate.allToString());
     }
     public void costTypeSelect()
     {
@@ -167,6 +179,21 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
     {
         switch(v.getId())
         {
+            case R.id.time_now:
+                        //时间选择器
+                        TimePickerView pvTime = new TimePickerBuilder(getActivity(), new OnTimeSelectListener() {
+                            @Override
+                            public void onTimeSelect(Date date, View v) {
+                                //date显示的是所有的数据情况，所以需要格式化输出
+                                SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                String format = simpleDateFormat.format(date);
+                                dateNow.setText(format);
+
+                            }
+                        }).setType(new boolean[]{true, true, true, true, true, true})// 默认全部显示
+                                .build();
+                        pvTime.show();
+                break;
             case R.id.button1:
                 setNotSelected();
                 cost_type.setText(button_1.getText().toString());

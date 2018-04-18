@@ -65,7 +65,7 @@ public class DataAdapter extends ArrayAdapter<MyData>
         return view;
 
     }
-    class ViewHold
+    private class ViewHold
     {
         public TextView type;
         public TextView date;

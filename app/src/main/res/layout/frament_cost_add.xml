@@ -56,6 +56,7 @@
                 android:layout_weight="1"
                 android:text="早餐"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button2"
@@ -64,6 +65,7 @@
                 android:layout_weight="1"
                 android:text="午餐"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button3"
@@ -72,6 +74,7 @@
                 android:layout_weight="1"
                 android:text="晚餐"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button4"
@@ -80,6 +83,7 @@
                 android:layout_weight="1"
                 android:text="买菜"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
         </LinearLayout>
         <LinearLayout
@@ -93,6 +97,7 @@
                 android:layout_weight="1"
                 android:text="零食"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button6"
@@ -101,6 +106,7 @@
                 android:layout_weight="1"
                 android:text="饮品"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button7"
@@ -109,6 +115,7 @@
                 android:layout_weight="1"
                 android:text="服饰"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button8"
@@ -117,6 +124,7 @@
                 android:layout_weight="1"
                 android:text="烟酒"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
         </LinearLayout>
         <LinearLayout
@@ -130,6 +138,7 @@
                 android:layout_weight="1"
                 android:text="化妆品"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button10"
@@ -138,6 +147,7 @@
                 android:layout_weight="1"
                 android:text="酒店"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button11"
@@ -146,6 +156,7 @@
                 android:layout_weight="1"
                 android:text="租房"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
             <Button
                 android:id="@+id/button12"
@@ -154,10 +165,35 @@
                 android:layout_weight="1"
                 android:text="出行"
                 android:background="@drawable/cost_add_select_style"
+                style="?android:attr/buttonStyle"
                 />
         </LinearLayout>
     </LinearLayout>
+    <LinearLayout android:layout_width="match_parent"
+        android:layout_height="30dp">
+         <TextView
+             android:layout_width="100dp"
+             android:layout_height="wrap_content"
+             android:text="时间"
+             android:textSize="20sp"
+             android:gravity="center_horizontal"
+             />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+            <TextView
+                android:id="@+id/time_now"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2014-5-1 21:32:09  "
+                android:textSize="20sp"
+                android:paddingRight="5dp"
+                android:drawableRight="@drawable/calendar"
+                />
 
+        </LinearLayout>
+    </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -253,6 +289,7 @@
        android:layout_weight="1"
        android:layout_height="wrap_content"
        android:text="save"
+       style="?android:attr/buttonStyle"
        />
     <Button
         android:id="@+id/cost_add_cancel"
@@ -260,6 +297,7 @@
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:text="cancel"
+        style="?android:attr/buttonStyle"
         />
     </LinearLayout>
 </LinearLayout>

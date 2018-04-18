@@ -3,6 +3,7 @@ package com.example.tagtest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 
 import org.litepal.crud.DataSupport;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +20,7 @@ import java.util.List;
  */
 
 public class MyFragmet1 extends Fragment implements View.OnClickListener{
-    private List<MyData> list=new ArrayList<>();
+    private List<MyData> list;
     private TextView cost_today;
     private TextView salary_today;
     private TextView date_of_today;
@@ -33,12 +33,13 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view=inflater.inflate(R.layout.first_fragment,container,false);
-        data_show_list=(ListView)getActivity().findViewById(R.id.list_today_data);
+      //  data_show_list=(ListView)getActivity().findViewById(R.id.list_today_data);
         data_show_list=(ListView)view.findViewById(R.id.list_today_data);
         dateNow=new GetDate();
+        //DataSupport方法会返回一个arrayList,它不会为空
         list= DataSupport.where("year=? and month=? and day=?",dateNow.getYear()+
                 "",dateNow.getMonth()+"",dateNow.getDay()+"").order("id desc").find(MyData.class);
-        DataAdapter adapter=new DataAdapter(getActivity(),R.layout.layout_list_show,list);
+        DataAdapter adapter=new DataAdapter(getActivity(),R.layout.list_view_basic_show,list);
         for(MyData temp:list)
         {
             if(temp.getType())
@@ -57,12 +58,14 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     {
         super.onActivityCreated(savedInstanceState);
         initialise();
+       // getTodayListView();
         setListener();
 
     }
     @Override
     public void onResume() //重新可见时刷新listView中的数据
     {
+        Log.d("HelloWold","onResume()调用");
         super.onResume();
         getTodayListView();
         setListener();
@@ -88,41 +91,14 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     }
     public void setListener()//给当前listView item设置监听
     {
+
       data_add.setOnClickListener(this);
+      data_show_list=getActivity().findViewById(R.id.list_today_data);
       data_show_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
           @Override
           public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+              //list一定要是更新后的
               MyData data=(MyData) list.get(i);
-             // if(data!=null)
-                 // Toast.makeText(getContext(),"you click "+data.getTypeSelect(),Toast.LENGTH_SHORT).show();
-             /* if(data.getType()==true)
-              {
-                  type="消费详情";
-              }
-              else
-                  type="收入详情";
-              String typeSelect=data.getTypeSelect();
-              String date=data.dateToString();
-              String money=String.valueOf(data.getMoney());
-              String solution=data.getSolution();
-              String cardInfor=null;
-              if(data.getBank().equals(""))
-              {
-                  cardInfor="无银行卡记录";
-              }
-              else
-                  cardInfor=data.getBank();
-              String remarks=data.getRemarks();
-              Bundle bundle=new Bundle();
-              bundle.putString("Type",type);
-              bundle.putString("TypeSelect",typeSelect);
-              bundle.putString("Date",date);
-              bundle.putString("Money",money);
-              bundle.putString("Solution",solution);
-              bundle.putString("CardInfo",cardInfor);
-              bundle.putString("Remarks","       "+remarks);
-              Intent intent=new Intent(getActivity(),ListShowCompleteData.class);
-              intent.putExtras(bundle);*/
               Intent intent=new Intent(getActivity(),ListShowCompleteData.class);
               Bundle bundle=new Bundle();
               bundle.putSerializable("Infor",data);
@@ -133,7 +109,7 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     }
     public void getTodayListView() //获得每日消费情况，按添加顺序倒序
     {
-        List<MyData> list= DataSupport.where("year=? and month=? and day=?",dateNow.getYear()+
+        list= DataSupport.where("year=? and month=? and day=?",dateNow.getYear()+
                 "",dateNow.getMonth()+"",dateNow.getDay()+"").order("id desc").find(MyData.class);
         cost=0.0f;
         salary=0.0f;
@@ -148,7 +124,7 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
         }
         cost_today.setText(cost+"");
         salary_today.setText(salary+"");
-        DataAdapter adapter=new DataAdapter(getActivity(),R.layout.layout_list_show,list);
+        DataAdapter adapter=new DataAdapter(getActivity(),R.layout.list_view_basic_show,list);
         data_show_list.setAdapter(adapter);
 
     }

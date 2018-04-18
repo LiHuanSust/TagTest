@@ -30,6 +30,10 @@ dependencies {
     //图片圆形化处理
     compile 'de.hdodenhof:circleimageview:2.2.0'
     compile 'com.android.support:design:26.1.0'
-    compile 'com.chanven.lib:cptr:1.0.0'
+    compile 'com.contrarywind:Android-PickerView:4.1.3'
+
+
+
+
 
 }

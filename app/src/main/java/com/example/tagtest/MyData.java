@@ -127,6 +127,10 @@ public class MyData extends DataSupport implements Serializable{
        return getUser()+","+getType()+","+getTypeSelect()+","+getSolution()+","+getMoney()+
               ","+getBank()+","+getRemarks()+","+getYear()+","+getMonth()+","+getDay()+","+getHourMinuteSecond()+"\n";
     }
+    public String getMonthDay()
+    {
+        return getMonth()+","+getDay();
+    }
 
 }
 

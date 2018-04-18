@@ -40,10 +40,14 @@ public class GetDate {
     {
         return calendar.get(Calendar.SECOND);
     }
+    public String getMonthDay() //返回月与日
+    {
+        return getMonth()+"-"+getDay();
+    }
     public String partToString()  //年月日 String化
     {
         int month=calendar.get(Calendar.MONTH)+1;
-        return calendar.get(Calendar.YEAR)+","+ month+","+calendar.get(Calendar.DATE);
+        return calendar.get(Calendar.YEAR)+"-"+ month+"-"+calendar.get(Calendar.DATE);
     }
     public String hourMinuteSecondString() //时，分，秒 String化
     {
@@ -51,7 +55,11 @@ public class GetDate {
     }
     public String allToString() //年月日，时分秒 String化
     {
-        return partToString()+","+hourMinuteSecondString();
+        return partToString()+" "+hourMinuteSecondString()+"  ";
+    }
+    public String getYearMonth()
+    {
+        return getYear()+","+getMonth();
     }
 
 }

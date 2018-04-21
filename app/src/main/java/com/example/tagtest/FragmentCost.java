@@ -50,7 +50,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
     private ArrayList<Button> list_button=null;
     public String cost_type_value=null;
     private String bank_select_value=null;
-    private boolean flag=false;
+    private boolean flag=false;  //判断收入还是支出
     private GetDate myDate;
 
     @Override

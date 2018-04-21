@@ -202,7 +202,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 finish();
                 break;
             case  R.id.search:
-                break;
+               Intent newIntent=new Intent(MainActivity.this,ActivitySearch.class);
+               startActivity(newIntent);
+               break;
             default:
         }
         return true;

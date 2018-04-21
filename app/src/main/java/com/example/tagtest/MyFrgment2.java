@@ -180,24 +180,27 @@ public class MyFrgment2 extends Fragment{
                 dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                          long[] temp={};
                           MyData data;
                           int len=0;
+                          long[] temp={};
                           for(int i:selectId)
                           {
-                            data=list.get(i);
-                            list.remove(i);
-                            //因为data是持久化对象（已经存在于数据库中），所以可以调用delect方法直接删除
-                            data.delete();
-
+                                Log.d("hello",i+":"+selectId.size());
+                                data = list.get(i);
+                               // list.remove(i);
+                                //因为data是持久化对象（已经存在于数据库中），所以可以调用delect方法直接删除
+                                data.delete();
                           }
                         //将selectId里面的内容清空
                         selectId.clear();
+
                           //将控件隐藏
                         mLinearLayout.setVisibility(View.GONE);
                         //切换删除选项
                         isDeleteMode=false;
                         //通知适配器更新数据
+                        list=DataSupport.where("year=? and month=?",dateNow.getYear()+"",dateNow.getMonth()+""
+                        ).find(MyData.class);
                         mAdapter.notifyDataSetChanged();
 
                     }
@@ -256,6 +259,7 @@ public class MyFrgment2 extends Fragment{
        menu.clear();
        inflater.inflate(R.menu.second_fragment_menu,menu);
     }
+    
 
      //使用内部类可以方便的获取数据，对外部类的控件直接进行操作
     class MyAdapter extends BaseAdapter {

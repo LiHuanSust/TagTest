@@ -12,8 +12,8 @@
         android:theme="@style/AppCompatTheme">
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppCompatTheme"
-            android:label="My application">
+            android:label="My application"
+            android:theme="@style/AppCompatTheme">
             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,8 +27,9 @@
         <activity android:name=".ActivityAdd" />
         <activity
             android:name=".ListShowCompleteData"
-            android:theme="@style/AppCompatTheme"></activity>
-        <activity android:name=".Alert_value"></activity>
+            android:theme="@style/AppCompatTheme" />
+        <activity android:name=".Alert_value" />
+        <activity android:name=".ActivitySearch"></activity>
     </application>
 
 </manifest>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/account_select_pic"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/snack"
+            />
+        <TextView
+            android:id="@+id/account_select_name"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:text=""
+            android:hint="test"
+            android:gravity="center_vertical"/>
+</LinearLayout>

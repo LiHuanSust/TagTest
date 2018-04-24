@@ -13,7 +13,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.tagtest.account.Account;
+
+import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
 
 
@@ -31,13 +35,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyFragment4 myFragment4;
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
+    static final String USER_NAME="Hello";
  //   private boolean flag=false; //判断需不需要重新加载数据
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Connector.getDatabase();
-
+        Connector.getDatabase();//数据库初始化
+        if(DataSupport.find(Account.class,1)==null)
+        {
+            /*Account account=new Account();
+            account.setName("默认账户");
+            account.setDate(new GetDate().allToString());
+            account.setMoneySalary(0.0f);
+            account.setMoneyCost(0.0f);
+            account.setUser("lihuan");
+            account.setPicId(R.drawable.breakfast);
+            account.save();*/
+            Toast.makeText(this, "empty ,empty ,empty", Toast.LENGTH_SHORT).show();
+        }
         bindView();
         tabDeal.setSelected(true);
         getFragment(1);

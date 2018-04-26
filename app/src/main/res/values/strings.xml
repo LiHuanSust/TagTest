@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">TagTest</string>
     <string name="breakfast">早餐</string>
+    <string name="spinner_name">请选择银行</string>
 </resources>

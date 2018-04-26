@@ -1,8 +1,11 @@
 package com.example.tagtest;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import android.widget.TextView;
 import com.example.tagtest.account.Account;
 import com.example.tagtest.account.AdapterAccount;
 import com.example.tagtest.account.SelectAccount;
+import com.example.tagtest.account.ShowAccountValue;
 
 import org.litepal.crud.DataSupport;
 
@@ -37,8 +41,8 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
 
         View view=inflater.inflate(R.layout.third_fragment,container,false);
         listView=view.findViewById(R.id.list_view_account);
-       // Account mAccount=new Account();
-        mList= DataSupport.findAll(Account.class);
+         //Account mAccount=new Account();
+        mList=DataSupport.findAll(Account.class);
         mAdapter=new AdapterAccount(getActivity(),R.layout.list_view_account_basic,mList);
         listView.setAdapter(mAdapter);
         return view;
@@ -48,15 +52,19 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
     {
         super.onActivityCreated(savedInstanceState);
         initialise();
-         setListener();
+        setListener();
 
     }
     @Override
     public void onResume() //重新可见时刷新listView中的数据
     {
         super.onResume();
+        Log.d("Fragment3","onResume");
+        mList=null;
+        mAdapter=null;
         mList=DataSupport.findAll(Account.class);
-       mAdapter.notifyDataSetChanged();
+        mAdapter=new AdapterAccount(getActivity(),R.layout.list_view_account_basic,mList);
+        listView.setAdapter(mAdapter);
 
     }
     public void initialise()
@@ -88,12 +96,42 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Account mAccount=mList.get(position);
-        
+        Account account=mList.get(position);
+        Bundle bundle=new Bundle();
+        bundle.putSerializable("Account",account);
+        Intent toShowAccountValue=new Intent(getActivity(), ShowAccountValue.class);
+        toShowAccountValue.putExtras(bundle);
+        startActivity(toShowAccountValue);
     }
 
     @Override
-    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-        return false;
+    public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+        AlertDialog.Builder dialog=new AlertDialog.Builder(getActivity());
+        dialog.setTitle("警告");
+        dialog.setMessage("你确定要删除该账号吗？该操作将删除与之相关的所有记录");
+        dialog.setCancelable(false);
+        dialog.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               Account account=mList.get(position);
+               int num=DataSupport.delete(Account.class,account.getId());  //只有用delete Support删才有级联删除的效果
+                Log.d("AAAA",num+"");
+              // mList.remove(position);
+                mList=null;
+                mAdapter=null;
+                mList=DataSupport.findAll(Account.class);
+                mAdapter=new AdapterAccount(getActivity(),R.layout.list_view_account_basic,mList);
+                listView.setAdapter(mAdapter);
+            }
+        });
+        dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                return;
+            }
+        });
+        dialog.show();
+        //return true ,不会触发点击事件
+        return true;
     }
 }

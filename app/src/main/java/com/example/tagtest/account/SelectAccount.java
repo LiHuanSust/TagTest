@@ -12,6 +12,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.tagtest.R;
+import com.example.tagtest.account.NewAccount.AccountSelect;
+import com.example.tagtest.account.NewAccount.AdapterAccountSelect;
+import com.example.tagtest.account.NewAccount.CompleteAccountCard;
+import com.example.tagtest.account.NewAccount.CompleteAccountCommon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +79,6 @@ public class SelectAccount extends AppCompatActivity {
                  {
                      case "银行卡":
                          Intent intentAccountCard=new Intent(SelectAccount.this,CompleteAccountCard.class);
-                         finish();
                          startActivity(intentAccountCard);
                          break;
                      default:
@@ -83,7 +86,6 @@ public class SelectAccount extends AppCompatActivity {
                          bundle.putSerializable("AccountSelect",mAccountSelect);
                          Intent intent=new Intent(SelectAccount.this,CompleteAccountCommon.class);
                          intent.putExtras(bundle);  //把账户类型及图片id传给下一个页面
-                         finish();
                          startActivity(intent);
 
                  }

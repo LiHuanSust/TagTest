@@ -74,6 +74,24 @@
                     android:textSize="20sp"
                     android:gravity="center_vertical"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="具体类别："
+                    android:textSize="20sp"
+                    android:gravity="center_vertical"/>
+                <Spinner
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/bank_card_select"
+                    android:spinnerMode="dialog"
+                    android:prompt="@string/spinner_name">
+                </Spinner>
+            </LinearLayout>
             <EditText
                 android:id="@+id/account_value_remarks"
                 android:layout_width="match_parent"

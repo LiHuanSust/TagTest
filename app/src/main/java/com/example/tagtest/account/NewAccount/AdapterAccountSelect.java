@@ -1,4 +1,4 @@
-package com.example.tagtest.account;
+package com.example.tagtest.account.NewAccount;
 
 import android.content.Context;
 import android.view.LayoutInflater;

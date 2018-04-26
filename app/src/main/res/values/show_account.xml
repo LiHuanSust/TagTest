@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_name">帐户名:</string>
+    <string name="account_type">账户类型:</string>
+    <string name="account_cost">账户支出:</string>
+    <string name="account_salary">账户收入:</string>
+    <string name="account_use_number">账户使用次数:</string>
+    <string name="account_add_time">账户添加时间:</string>
+    <string name="account_near_use">账户最近使用:</string>
+    <string name="account_remark">账户备注:</string>
+
+
+</resources>

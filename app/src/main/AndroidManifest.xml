@@ -74,15 +74,15 @@
         <activity
             android:name=".ToolBarTest"
             android:theme="@style/AppCompatTheme" />
-        <activity android:name=".ActivityAdd" />
+        <activity android:name=".home.ActivityAdd" />
         <activity
-            android:name=".ListShowCompleteData"
+            android:name=".values.ListShowCompleteData"
             android:theme="@style/AppCompatTheme" />
         <activity android:name=".Alert_value" />
-        <activity android:name=".ActivitySearch" />
+        <activity android:name=".values.ActivitySearch" />
         <activity android:name=".account.SelectAccount" />
-        <activity android:name=".account.NewAccount.CompleteAccountCommon" />
-        <activity android:name=".account.NewAccount.CompleteAccountCard" />
+        <activity android:name=".account.CompleteAccountCommon" />
+        <activity android:name=".account.CompleteAccountCard" />
         <activity android:name=".tools.ActivityVoice" />
         <activity android:name=".account.ShowAccountValue"></activity>
     </application>

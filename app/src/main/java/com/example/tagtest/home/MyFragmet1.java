@@ -1,4 +1,4 @@
-package com.example.tagtest;
+package com.example.tagtest.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.tagtest.DataAdapter;
+import com.example.tagtest.MyData;
+import com.example.tagtest.R;
+import com.example.tagtest.tools.GetDate;
+import com.example.tagtest.tools.MyCalculate;
+import com.example.tagtest.values.ListShowCompleteData;
 
 import org.litepal.crud.DataSupport;
 
@@ -26,8 +33,8 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     private TextView date_of_today;
     private TextView data_add;
     private ListView data_show_list;
-    private float cost=0.0f;
-    private float salary=0.0f;
+    private String cost="0";
+    private String salary="0";
     private GetDate dateNow; //当前时间
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
@@ -44,11 +51,12 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
         {
             if(temp.getType())
             {
-                cost+=temp.getMoney();
+                cost= MyCalculate.add(cost,temp.getMoney());
             }
             else
-                salary+=temp.getMoney();
+               salary=MyCalculate.add(salary,temp.getMoney());
         }
+
         data_show_list.setAdapter(adapter);
 
         return view;
@@ -58,7 +66,7 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     {
         super.onActivityCreated(savedInstanceState);
         initialise();
-       // getTodayListView();
+         //getTodayListView();
         setListener();
 
     }
@@ -98,11 +106,8 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
           @Override
           public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
               //list一定要是更新后的
-              MyData data=(MyData) list.get(i);
               Intent intent=new Intent(getActivity(),ListShowCompleteData.class);
-              Bundle bundle=new Bundle();
-              bundle.putSerializable("Infor",data);
-              intent.putExtras(bundle);
+              intent.putExtra("MyDataId",list.get(i).getId());
               startActivity(intent);
           }
       });
@@ -111,19 +116,19 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     {
         list= DataSupport.where("year=? and month=? and day=?",dateNow.getYear()+
                 "",dateNow.getMonth()+"",dateNow.getDay()+"").order("id desc").find(MyData.class);
-        cost=0.0f;
-        salary=0.0f;
+        cost="0";
+        salary="0";
         for(MyData temp:list)
         {
             if(temp.getType())
             {
-                cost+=temp.getMoney();
+                cost=MyCalculate.add(cost,temp.getMoney());
             }
             else
-                salary+=temp.getMoney();
+                salary=MyCalculate.add(salary,temp.getMoney());
         }
-        cost_today.setText(cost+"");
-        salary_today.setText(salary+"");
+        cost_today.setText(cost);
+        salary_today.setText(salary);
         DataAdapter adapter=new DataAdapter(getActivity(),R.layout.list_view_basic_show,list);
         data_show_list.setAdapter(adapter);
 

@@ -1,17 +1,28 @@
-package com.example.tagtest;
+package com.example.tagtest.values;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.tagtest.Alert_value;
+import com.example.tagtest.MyData;
+import com.example.tagtest.R;
+import com.example.tagtest.account.Account;
+import com.example.tagtest.account.AccountInformation;
+import com.example.tagtest.tools.MyCalculate;
+
 import org.litepal.crud.DataSupport;
 
+/*显示数据详情
+* 即：每条消费或支出的内容
+*/
 public class ListShowCompleteData extends AppCompatActivity implements View.OnClickListener{
     private TextView typeValue; //标题栏
     private TextView dateValue; //时间显示
@@ -25,6 +36,8 @@ public class ListShowCompleteData extends AppCompatActivity implements View.OnCl
     private Button buttonAlert; //修改按钮
     private Button buttonDrop; //删除按钮
     private MyData data;  //当前data详情
+    private Account account; //当前记录归属账户
+    private AccountInformation accountInformation; //账户详细信息
 
 
     @Override
@@ -47,96 +60,36 @@ public class ListShowCompleteData extends AppCompatActivity implements View.OnCl
                 finish();
             }
         });
-        data=(MyData)getIntent().getSerializableExtra("Infor");
-        if(data!=null && data.getType()==true)
+        long id=getIntent().getLongExtra("MyDataId",0);
+        if(id==0)
         {
+            Log.d("ListShowCompleteData","id is wrong!");
+            finish();
+        }
+        data=DataSupport.find(MyData.class,id);
+       // Account account=DataSupport.find(Account.class,data.getAccountId());
+        if(data.getType())
+        {
+
             typeValue.setText("消费详情");
         }
         else
         {
             typeValue.setText("收入详情");
         }
+        account=DataSupport.find(Account.class,data.getAccountId());
+        accountInformation=account.getAccountInformation();
+        Log.d("LisgtShowCompleteData",accountInformation.toString());
+        picTextValue.setText(data.getTypeSelect());
         dateValue.setText(data.dateToString());
         moneyValue.setText(data.getMoney()+"");
-        payValue.setText(data.getSolution());
-        if(data.getBank()!=null && !data.getBank().equals(""))
-        {
-            cardValue.setText(data.getBank());
-        }
+        payValue.setText(account.getType());
+        if(accountInformation.isCard())
+           cardValue.setText(account.getAccountName());
         else
-        {
-            cardValue.setText("无银行卡消费记录");
-        }
-        payValue.setText(data.getSolution());
+            cardValue.setText("未使用银行卡");
         remarksValue.setText("    "+data.getRemarks());
-        String picSelected=data.getTypeSelect();
-        picTextValue.setText(picSelected);
-     //   setPicture(picSelected);
-       /* Bundle bundle=getIntent().getExtras();
-        typeValue.setText(bundle.getString("Type"));
-        dateValue.setText(bundle.getString("Date"));
-        moneyValue.setText(bundle.getString("Money"));
-        payValue.setText(bundle.getString("Solution"));
-        cardValue.setText(bundle.getString("CardInfo"));
-        remarksValue.setText(bundle.getString("Remarks"));
-       String picSelected=bundle.getString("TypeSelect");
-       dataNow=new MyData();
 
-        switch(picSelected)
-        {
-            case "早餐":
-                pictureValue.setImageResource(R.drawable.breakfast);
-                picTextValue.setText("早餐");
-                break;
-            case "午餐":
-                pictureValue.setImageResource(R.drawable.lunch);
-                picTextValue.setText("午餐");
-                break;
-            case "晚餐":
-                pictureValue.setImageResource(R.drawable.dinner);
-                picTextValue.setText("晚餐");
-                break;
-            case "烟酒":
-                pictureValue.setImageResource(R.drawable.wine);
-                picTextValue.setText("烟酒");
-                break;
-            case "零食":
-                pictureValue.setImageResource(R.drawable.snack);
-                picTextValue.setText("零食");
-                break;
-            case "水果":
-                pictureValue.setImageResource(R.drawable.fruit);
-                picTextValue.setText("水果");
-                break;
-            case "酒店":
-                pictureValue.setImageResource(R.drawable.hotel);
-                picTextValue.setText("酒店");
-                break;
-            case "买菜":
-                pictureValue.setImageResource(R.drawable.shopping);
-                picTextValue.setText("买菜");
-                break;
-            case "化妆品":
-                pictureValue.setImageResource(R.drawable.cosmetic);
-                picTextValue.setText("化妆品");
-                break;
-            case "旅行":
-                pictureValue.setImageResource(R.drawable.trip);
-                picTextValue.setText("旅行");
-                break;
-            case "租房":
-                pictureValue.setImageResource(R.drawable.tenant);
-                picTextValue.setText("租房");
-                break;
-            case "饮品":
-                pictureValue.setImageResource(R.drawable.drink);
-                picTextValue.setText("饮品");
-                break;
-             default:
-                 break;
-
-
-        }*/
     }
     public void initialise()
     {
@@ -239,11 +192,51 @@ public class ListShowCompleteData extends AppCompatActivity implements View.OnCl
                     break;
                 }
             case R.id.button_drop:
-              //  Toast.makeText(this,"hello+ "+data.getId(),Toast.LENGTH_SHORT).show();
-                DataSupport.delete(MyData.class,data.getId());
-                Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
+                 String money,accountMoney;
+                 String dataMoney=data.getMoney();
+                //若是消费信息
+                  if(data.getType())
+                  {
+                      money= MyCalculate.sub(accountInformation.getCost(),dataMoney);
+                      accountInformation.setCost(money);
+                  }
+                  else
+                  {
+                      //收入信息
+                      money=MyCalculate.sub(accountInformation.getSalary(),dataMoney);
+                      accountInformation.setSalary(money);
+                  }
+                accountMoney=MyCalculate.add(accountInformation.getMoney(),dataMoney);
+                accountInformation.setMoney(accountMoney);
+                accountInformation.setDateAdd("无");
+                accountInformation.setNum(accountInformation.getNum()-1);
+                account.getList().remove(data);
+                  if(accountInformation.save())
+                  {
+                      if(DataSupport.delete(MyData.class,data.getId())==1)
+                      {
+                          Toast.makeText(this,"删除成功",Toast.LENGTH_SHORT).show();
+                          finish();
+                      }
+                      else
+                      {
+                          Toast.makeText(this,"删除失败",Toast.LENGTH_SHORT).show();
+                          finish();
+                      }
+                  }
+                  else
+                  {
+
+                      Toast.makeText(this,"关联信息修改失败",Toast.LENGTH_SHORT).show();
+                  }
+                //if(accountInformation.save())
+
+                     break;
                 //写个弹窗确认吧。。
-                break;
+                //改变账户的消费信息还有问题
+                /*else
+                    Toast.makeText(this,"一些存储的问题发生了！",Toast.LENGTH_SHORT).show();
+                break;*/
 
                 //DataSupport.deleteAll(MyData.class,"")
 

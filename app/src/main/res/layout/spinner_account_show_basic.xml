@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="40dp">
+    <ImageView
+        android:id="@+id/spinner_account_pic"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ming_sheng"/>
+     <TextView
+         android:layout_marginStart="5dp"
+         android:id="@+id/spinner_account_name"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:hint="test"
+         android:layout_gravity="center_vertical"
+        />
+
+    <TextView
+        android:layout_marginStart="5dp"
+        android:id="@+id/spinner_account_money"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="1000.0"
+        android:layout_gravity="center_vertical"/>
+</LinearLayout>

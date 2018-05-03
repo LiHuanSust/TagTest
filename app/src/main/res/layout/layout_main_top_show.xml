@@ -76,7 +76,8 @@
           android:layout_height="wrap_content"
           android:text="新增记录"
           android:gravity="center_vertical"
-          android:drawableRight="@drawable/ic_launcher"
+          android:drawableRight="@drawable/first_fragment_add"
+          android:textSize="20sp"
 
 
           />

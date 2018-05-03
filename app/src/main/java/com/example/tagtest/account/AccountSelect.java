@@ -1,4 +1,4 @@
-package com.example.tagtest.account.NewAccount;
+package com.example.tagtest.account;
 
 import java.io.Serializable;
 

@@ -1,10 +1,12 @@
-package com.example.tagtest;
+package com.example.tagtest.home;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.example.tagtest.R;
 
 /**
  * Created by MyFirstPC on 2018/3/27.

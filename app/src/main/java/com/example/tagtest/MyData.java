@@ -1,5 +1,7 @@
 package com.example.tagtest;
 
+import com.example.tagtest.account.Account;
+
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
@@ -9,113 +11,130 @@ import java.io.Serializable;
  */
 
 public class MyData extends DataSupport implements Serializable{
-    private static final long serialVersionUID=1L; // 设置序列化id
+    public static final long serialVersionUID=1L; // 设置序列化id
     private transient String user; //用户名；不用被序列化
     private boolean type; //消费或收入的标识 当type为true表示支出，当为false表示收入
-    private String typeSelect; //消费或收入的具体类别
-    private String solution; //付款方式或收入方式
+    private String typeSelect; //消费或收入的具体选择
     private int year; //年
     private int month; //月
     private int day;//日
     private String hourMinuteSecond; //时分秒的字符串形式
-    private float money;//具体金额,
-    private String bank; //银行选择
+    private String money;//具体金额,
     private String remarks; //备注
     private long id; //加id是为了方便进行查找，删除，注意：此处即使加了id，并重新加了值，进入数据库中还是会变主键id的值
-   /* public MyData(String user,boolean type,String typeSelect,String hourMinuteSecond,float money)
-    {
-        this.user=user;
-        this.type=type;
-
-    }*/
+    private long accountId;  //加入accountId;
+    private Account account;//消费明细和使用的账号一对一
     public MyData()
     {}
-    public MyData(String user,boolean type,String typeSelect,String solution,int year,int month,int day,String hourMinuteSecond,float money,String bank,String remarks) //此接口是数据库存储调用
+    public MyData(String user,boolean type,String typeSelect,int year,int month,int day,String hourMinuteSecond,String money,String remarks) //此接口是数据库存储调用
     {
-        id=0L;
         this.user=user;
         this.type=type;
         this.typeSelect=typeSelect;
-        this.solution=solution;
         this.year=year;
         this.month=month;
         this.day=day;
         this.hourMinuteSecond=hourMinuteSecond;
         this.money=money;
-        this.bank=bank;
         this.remarks=remarks;
-
     }
-    public String getUser()
-    {
+
+    public String getUser() {
         return user;
     }
-    public boolean getType()
-    {
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public boolean getType() {
         return type;
     }
-    public String getTypeSelect()
-    {
+
+    public void setType(boolean type) {
+        this.type = type;
+    }
+
+    public String getTypeSelect() {
         return typeSelect;
     }
-    public String getSolution()
-    {
-        return solution;
+
+    public void setTypeSelect(String typeSelect) {
+        this.typeSelect = typeSelect;
     }
-    public int getYear(){return year;}
-    public int getMonth(){return month;}
-    public int getDay(){return day;}
-    public String getHourMinuteSecond()
-    {
+
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public int getMonth() {
+        return month;
+    }
+
+    public void setMonth(int month) {
+        this.month = month;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+    public String getHourMinuteSecond() {
         return hourMinuteSecond;
     }
-    public float getMoney()
-    {
+
+    public void setHourMinuteSecond(String hourMinuteSecond) {
+        this.hourMinuteSecond = hourMinuteSecond;
+    }
+
+    public String getMoney() {
         return money;
     }
-    public String getBank()
-    {
-        return bank;
+
+    public void setMoney(String money) {
+        this.money = money;
     }
-    public String getRemarks()
-    {
+
+    public String getRemarks() {
         return remarks;
     }
-    public long getId(){return id;}
-    public void setUser(String user)
-    {
-        this.user=user;
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
     }
-    public void setType(boolean type)
-    {
-        this.type=type;
+
+    public long getId() {
+        return id;
     }
-    public void setTypeSelect(String type)
-    {
-        this.typeSelect=type;
+
+    public void setId(long id) {
+        this.id = id;
     }
-    public void setSolution(String solution)
-    {
-        this.solution=solution;
+
+    public long getAccountId() {
+        return accountId;
     }
-    public void setYear(int year)
-    {
-        this.year=year;
+
+    public void setAccountId(long accountId) {
+        this.accountId = accountId;
     }
-    public void setMonth(int month){this.month=month;}
-    public void setDay(int day){this.day=day;}
-    public void setMoney(float money)
-    {
-        this.money=money;
+
+    public Account getAccount() {
+        return account;
     }
-    public void setBank(String bank)
-    {
-        this.bank=bank;
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
-    public void setRemarks(String remarks)
-    {
-        this.remarks=remarks;
-    }
+
     public String dateToString()
     {
         return getYear()+"."+getMonth()+"."+getDay()+" "+getHourMinuteSecond();
@@ -124,8 +143,8 @@ public class MyData extends DataSupport implements Serializable{
     public String toString()
     {
 
-       return getUser()+","+getType()+","+getTypeSelect()+","+getSolution()+","+getMoney()+
-              ","+getBank()+","+getRemarks()+","+getYear()+","+getMonth()+","+getDay()+","+getHourMinuteSecond()+"\n";
+       return getUser()+","+","+getTypeSelect()+","+getMoney()+
+              ","+getRemarks()+","+getYear()+","+getMonth()+","+getDay()+","+getHourMinuteSecond()+"\n";
     }
     public String getMonthDay()
     {

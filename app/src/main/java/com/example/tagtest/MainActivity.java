@@ -16,6 +16,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tagtest.account.Account;
+import com.example.tagtest.home.ActivityAdd;
+import com.example.tagtest.home.MyFragmet1;
+import com.example.tagtest.values.ActivitySearch;
+import com.example.tagtest.account.MyFragment3;
+import com.example.tagtest.values.MyFrgment2;
 
 import org.litepal.crud.DataSupport;
 import org.litepal.tablemanager.Connector;
@@ -30,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //add data
     private FragmentManager fragmentManager;
     private MyFragmet1 myFragmet1;
-    private  MyFrgment2 myFrgment2;
+    private MyFrgment2 myFrgment2;
     private MyFragment3 myFragment3;
     private MyFragment4 myFragment4;
     private DrawerLayout drawerLayout;

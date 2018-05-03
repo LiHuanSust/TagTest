@@ -1,10 +1,11 @@
-package com.example.tagtest;
+package com.example.tagtest.tools;
 
 import java.util.Calendar;
 
 /**
  * Created by MyFirstPC on 2018/3/27.
  * add data for year,month,day,hour,minute,second
+ * 自定义时间类，方便获取时间
  */
 
 public class GetDate {

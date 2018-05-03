@@ -1,4 +1,4 @@
-package com.example.tagtest;
+package com.example.tagtest.account;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.tagtest.R;
 import com.example.tagtest.account.Account;
 import com.example.tagtest.account.AdapterAccount;
 import com.example.tagtest.account.SelectAccount;

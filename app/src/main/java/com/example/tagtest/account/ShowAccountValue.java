@@ -10,8 +10,6 @@ import android.widget.TextView;
 
 import com.example.tagtest.R;
 
-import org.litepal.crud.DataSupport;
-
 /*
 *该活动用来显示账号的详细信息
 *
@@ -37,7 +35,7 @@ public class ShowAccountValue extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_account_value);
         account=(Account) getIntent().getSerializableExtra("Account");
-        accountInformation= DataSupport.find(AccountInformation.class,account.getId());
+        accountInformation= account.getAccountInformation();
         initialiise();
         setListener();
         onLoadData();
@@ -92,17 +90,22 @@ public class ShowAccountValue extends AppCompatActivity implements View.OnClickL
     //加载数据
     public void onLoadData()
     {
-        accountName.setText(account.getAccountName());
-        accountType.setText(account.getType());
-        accountCost.setText(accountInformation.getCost()+"");
-        accountSalary.setText(accountInformation.getSalary()+"");
-       useNumber.setText(accountInformation.getNum()+"");
-        //Log.d("Test:",accountInformation.getNum()+"");
-       addTime.setText(accountInformation.getDate());
-       nearUserTime.setText(accountInformation.getDateAdd());
-       remarks.setText("      "+accountInformation.getRemarks());
-       Log.d("ThisIsTest",accountInformation.getRemarks());
-
+        if(accountInformation!=null) {
+            accountName.setText(account.getAccountName());
+            accountType.setText(account.getType());
+            accountCost.setText(accountInformation.getCost() + "");
+            accountSalary.setText(accountInformation.getSalary() + "");
+            useNumber.setText(accountInformation.getNum() + "");
+            //Log.d("Test:",accountInformation.getNum()+"");
+            addTime.setText(accountInformation.getDate());
+            nearUserTime.setText(accountInformation.getDateAdd());
+            remarks.setText("      " + accountInformation.getRemarks());
+            Log.d("ThisIsTest", accountInformation.getRemarks());
+        }
+        else
+        {
+            Log.d("Test","accountinformation is null");
+        }
 
     }
 

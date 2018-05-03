@@ -1,8 +1,12 @@
 package com.example.tagtest.account;
 
+import com.example.tagtest.MyData;
+
 import org.litepal.crud.DataSupport;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by MyFirstPC on 2018/4/24.
@@ -14,8 +18,9 @@ public class Account extends DataSupport implements Serializable{
     private String user;//用户
     private String accountName;//帐户名
     private String type;//账户类型
-    private int accountPicId; //账户图片id
-    private AccountInformation accountInformation;  //一对一关系
+    private int accoutPicId; //账户图片名称
+    private AccountInformation accountInformation;  //一对一关系，一个账户对应一个账户信息
+    private List<MyData> list=new ArrayList<>(); //多对一关系，一个账号对应多条消费记录
 
     public long getId() {
         return id;
@@ -49,28 +54,28 @@ public class Account extends DataSupport implements Serializable{
         this.type = type;
     }
 
-    public int getAccountId() {
-        return accountPicId;
+    public int getAccoutPicId() {
+        return accoutPicId;
     }
 
-    public void setAccountId(int accountId) {
-        this.accountPicId = accountId;
-    }
-
-    public int getAccountPicId() {
-        return accountPicId;
-    }
-
-    public void setAccountPicId(int accountPicId) {
-        this.accountPicId = accountPicId;
+    public void setAccoutPicId(int accoutPicId) {
+        this.accoutPicId = accoutPicId;
     }
 
     public AccountInformation getAccountInformation() {
 
-        return DataSupport.where("account_id=?",String.valueOf(getId())).findFirst(AccountInformation.class);
+        return DataSupport.where("account_id=?",getId()+"").findFirst(AccountInformation.class);
     }
 
     public void setAccountInformation(AccountInformation accountInformation) {
         this.accountInformation = accountInformation;
+    }
+
+    public List<MyData> getList() {
+        return list;
+    }
+
+    public void setList(List<MyData> list) {
+        this.list = list;
     }
 }

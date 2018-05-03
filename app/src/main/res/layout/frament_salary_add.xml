@@ -141,6 +141,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:maxLines="1"
+            android:inputType="numberDecimal"
             />
 
     </LinearLayout>
@@ -158,7 +159,6 @@
             />
         <Spinner
             android:id="@+id/spinner_cost_type"
-            android:entries="@array/apply_type"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -181,7 +181,6 @@
             />
         <Spinner
             android:id="@+id/spinner_bank_select"
-            android:entries="@array/apply_type"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -211,14 +210,14 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="save"
+            android:text="@string/button_save"
             />
         <Button
             android:id="@+id/cost_add_cancel"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="cancel"
+            android:text="@string/button_clear"
             />
     </LinearLayout>
 

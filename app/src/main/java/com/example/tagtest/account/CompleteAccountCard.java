@@ -1,4 +1,4 @@
-package com.example.tagtest.account.NewAccount;
+package com.example.tagtest.account;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,10 +18,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tagtest.account.AccountInformation;
-import com.example.tagtest.GetDate;
+import com.example.tagtest.tools.GetDate;
 import com.example.tagtest.R;
-import com.example.tagtest.account.Account;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +101,8 @@ public class CompleteAccountCard extends AppCompatActivity implements View.OnCli
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 AccountSelect temp=list.get(position);
                 typeName=temp.getName();
-                picId=temp.getPicId();
+                picId=position;
+
             }
 
             @Override
@@ -153,16 +152,16 @@ public class CompleteAccountCard extends AppCompatActivity implements View.OnCli
                     accountInformation.setDateAdd(new GetDate().allToString());
                     accountInformation.setDate("无");
                     accountInformation.setNum(0);
-                    accountInformation.setSalary(0.0f);
-                    accountInformation.setCost(0.0f);
+                    accountInformation.setSalary("0");
+                    accountInformation.setCost("0");
                     accountInformation.setRemarks(remarks.getText().toString());
-                    accountInformation.setMoney(Float.parseFloat(mMoney));
+                    accountInformation.setMoney(mMoney);
                     accountInformation.setAccountName(mAccountNumber);
                     isAccountInfor=accountInformation.save();
                     Account account=new Account();
                     account.setUser("L.H");
                     account.setType(typeName);
-                    account.setAccountPicId(picId);
+                    account.setAccoutPicId(picId);
                     account.setAccountName(mAccountNumber);
                     account.setAccountInformation(accountInformation);
                     isAccount=account.save();
@@ -221,6 +220,7 @@ public class CompleteAccountCard extends AppCompatActivity implements View.OnCli
         // else handle other activity results
     }
 
+    //银行卡显示界面的适配器
     class SpinnerAdapter extends BaseAdapter {
         private Context context;
         private List<AccountSelect> dataList;

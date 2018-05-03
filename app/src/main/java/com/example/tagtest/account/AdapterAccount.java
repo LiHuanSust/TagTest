@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.tagtest.R;
+import com.example.tagtest.tools.GetPictureId;
 
 import java.util.List;
 
@@ -43,9 +44,9 @@ public class AdapterAccount extends ArrayAdapter<Account>
                 view = convertView;
                 viewHold=(ViewHold)view.getTag();
             }
-            viewHold.accountPic.setImageResource(mAccount.getAccountPicId());
+            boolean flag=mAccount.getAccountInformation().isCard();
+            viewHold.accountPic.setImageResource(GetPictureId.getId(mAccount.getAccoutPicId(),flag));
             viewHold.accountName.setText(mAccount.getAccountName());
-
             viewHold.money.setText(mAccount.getAccountInformation().getMoney()+"");
             return view;
         }

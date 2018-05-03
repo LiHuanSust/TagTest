@@ -2,4 +2,6 @@
     <string name="app_name">TagTest</string>
     <string name="breakfast">早餐</string>
     <string name="spinner_name">请选择银行</string>
+    <string name="button_save">保存</string>
+    <string name="button_clear">清空</string>
 </resources>

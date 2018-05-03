@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
+import com.example.tagtest.tools.GetDate;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -265,8 +266,8 @@ public class Alert_value extends AppCompatActivity implements View.OnClickListen
                     String hourMinuteSecond=dateNow.hourMinuteSecondString();
                     // BigDecimal costMoney=new BigDecimal(costMoneyValue); //java提供的专门用于精确计算的类
                     //costMoney.setScale(2,BigDecimal.ROUND_HALF_UP); //四舍五入，小数保留两位
-                    float costMoney=Float.parseFloat(costMoneyValue);
-                    MyData newDate=new MyData("lihuan1994",true,typeSelect,solution,year,month,day,hourMinuteSecond,costMoney,bankCard,remarks);
+                   // float costMoney=Float.parseFloat(costMoneyValue);
+                    MyData newDate=new MyData("lihuan1994",true,typeSelect,year,month,day,hourMinuteSecond,costMoneyValue,remarks);
                     newDate.update(data.getId());//更新数据
                         Toast.makeText(this, "更新成功", Toast.LENGTH_SHORT).show();
                         finish();

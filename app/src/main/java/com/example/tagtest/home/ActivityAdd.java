@@ -1,4 +1,4 @@
-package com.example.tagtest;
+package com.example.tagtest.home;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
+import com.example.tagtest.R;
 
 import java.util.ArrayList;
 

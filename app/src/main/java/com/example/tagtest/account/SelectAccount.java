@@ -12,10 +12,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.tagtest.R;
-import com.example.tagtest.account.NewAccount.AccountSelect;
-import com.example.tagtest.account.NewAccount.AdapterAccountSelect;
-import com.example.tagtest.account.NewAccount.CompleteAccountCard;
-import com.example.tagtest.account.NewAccount.CompleteAccountCommon;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,16 +69,25 @@ public class SelectAccount extends AppCompatActivity {
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                 int flag;
                  AccountSelect mAccountSelect=mList.get(position);
-                 switch(mAccountSelect.getName())
-                 {
-                     case "银行卡":
-                         Intent intentAccountCard=new Intent(SelectAccount.this,CompleteAccountCard.class);
-                         startActivity(intentAccountCard);
-                         break;
-                     default:
+                  if(position==1) {
+                      //是银行卡
+                      Intent intentAccountCard = new Intent(SelectAccount.this, CompleteAccountCard.class);
+                      startActivity(intentAccountCard);
+                  }
+                  else
+                  {
+                      if(position==0)
+                          flag=15; //现金标志位
+                       else if(position==2)
+                           flag=16; //支付宝
+                       else if(position==3)
+                           flag=17; //微信
+                       else
+                           flag=18; //其他
                          Bundle bundle=new Bundle();
+                         mAccountSelect.setPicId(flag);
                          bundle.putSerializable("AccountSelect",mAccountSelect);
                          Intent intent=new Intent(SelectAccount.this,CompleteAccountCommon.class);
                          intent.putExtras(bundle);  //把账户类型及图片id传给下一个页面

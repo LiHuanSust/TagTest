@@ -12,9 +12,9 @@ public class AccountInformation extends DataSupport{
     private String dateAdd;  //最近一笔消费时间
     private String date;  //账户创建时间
     private String remarks; //账号备注
-    private float cost; //记录总支出
-    private float salary; //记录总收入
-    private float money; //账户净资产
+    private String cost; //记录总支出
+    private String salary; //记录总收入
+    private String money; //账户净资产
     private int num; //记录消费次数
     private boolean isCard; //标志位判断是不是银行卡 。。。
     private Account account; //一对一关系
@@ -59,27 +59,27 @@ public class AccountInformation extends DataSupport{
         this.remarks = remarks;
     }
 
-    public float getCost() {
+    public String getCost() {
         return cost;
     }
 
-    public void setCost(float cost) {
+    public void setCost(String cost) {
         this.cost = cost;
     }
 
-    public float getSalary() {
+    public String getSalary() {
         return salary;
     }
 
-    public void setSalary(float salary) {
+    public void setSalary(String salary) {
         this.salary = salary;
     }
 
-    public float getMoney() {
+    public String getMoney() {
         return money;
     }
 
-    public void setMoney(float money) {
+    public void setMoney(String money) {
         this.money = money;
     }
 
@@ -100,7 +100,7 @@ public class AccountInformation extends DataSupport{
     }
 
     public Account getAccount() {
-        return DataSupport.where("accountinformation_id=?",String.valueOf(getId())).findFirst(Account.class);
+        return DataSupport.where("accountinformation_id=?",getId()+"").findFirst(Account.class);
     }
 
     public void setAccount(Account account) {

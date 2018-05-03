@@ -1,4 +1,4 @@
-package com.example.tagtest.account.NewAccount;
+package com.example.tagtest.account;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,10 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tagtest.GetDate;
+import com.example.tagtest.tools.GetDate;
 import com.example.tagtest.R;
-import com.example.tagtest.account.Account;
-import com.example.tagtest.account.AccountInformation;
 import com.example.tagtest.tools.ActivityVoice;
 
 /*
@@ -101,7 +99,7 @@ public class CompleteAccountCommon extends AppCompatActivity implements View.OnC
                    mAccount.setUser("L.H");
                    mAccount.setAccountName(name);
                    mAccount.setType(mAccountSelect.getName());
-                   mAccount.setAccountPicId(mAccountSelect.getPicId());
+                   mAccount.setAccoutPicId(mAccountSelect.getPicId());
                  //  mAccount.setAccountInformation(mAccountInformation);
                    accountSave=mAccount.save();
                    AccountInformation mAccountInformation = new AccountInformation();
@@ -109,9 +107,9 @@ public class CompleteAccountCommon extends AppCompatActivity implements View.OnC
                    mAccountInformation.setRemarks(mRemarks);
                    mAccountInformation.setDate(new GetDate().allToString());
                    Log.d("Test",money);
-                   mAccountInformation.setMoney(Float.parseFloat(money));
-                   mAccountInformation.setCost(0.0f);
-                   mAccountInformation.setSalary(0.0f);
+                   mAccountInformation.setMoney(money);
+                   mAccountInformation.setCost("0");
+                   mAccountInformation.setSalary("0");
                    mAccountInformation.setNum(0);
                    mAccountInformation.setDateAdd("无");
                    //标志位，在common里都设为false;

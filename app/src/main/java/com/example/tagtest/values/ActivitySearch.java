@@ -1,4 +1,4 @@
-package com.example.tagtest;
+package com.example.tagtest.values;
 
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -11,6 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import com.example.tagtest.DataAdapter;
+import com.example.tagtest.MyData;
+import com.example.tagtest.R;
 
 import org.litepal.crud.DataSupport;
 
@@ -81,7 +85,7 @@ public class ActivitySearch extends AppCompatActivity {
                     Log.d("Test","coming");
                     for(MyData temp:list)
                     {
-                        if(temp.getSolution().contains(newText)  || temp.getTypeSelect().contains(newText) ||
+                        if(temp.getTypeSelect().contains(newText) ||
                                 (temp.getMoney()+"").contains(newText))
                         {
                             listSelect.add(temp);

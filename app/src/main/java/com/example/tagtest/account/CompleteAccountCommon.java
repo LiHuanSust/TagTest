@@ -1,6 +1,5 @@
 package com.example.tagtest.account;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,9 +12,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tagtest.tools.GetDate;
 import com.example.tagtest.R;
-import com.example.tagtest.tools.ActivityVoice;
+import com.example.tagtest.tools.GetDate;
 
 /*
 * 普通账户内容完善Activity
@@ -76,9 +74,7 @@ public class CompleteAccountCommon extends AppCompatActivity implements View.OnC
         switch(v.getId())
         {
             case R.id.button_clear:
-               //clearValue();
-                Intent voiceIntent=new Intent(CompleteAccountCommon.this, ActivityVoice.class);
-                startActivity(voiceIntent);
+
                break;
             case R.id.button_save:
                String name=accountName.getText().toString();

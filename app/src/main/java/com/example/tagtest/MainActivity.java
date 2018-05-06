@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.tagtest.account.Account;
 import com.example.tagtest.home.ActivityAdd;
 import com.example.tagtest.home.MyFragmet1;
+import com.example.tagtest.tables.MyFragment4;
 import com.example.tagtest.values.ActivitySearch;
 import com.example.tagtest.account.MyFragment3;
 import com.example.tagtest.values.MyFrgment2;

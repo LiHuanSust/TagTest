@@ -68,6 +68,11 @@ public class ListShowCompleteData extends AppCompatActivity implements View.OnCl
         }
         data=DataSupport.find(MyData.class,id);
        // Account account=DataSupport.find(Account.class,data.getAccountId());
+        if(data==null)
+        {
+            Log.d("ListShowCompleteData","data is null");
+            finish();
+        }
         if(data.getType())
         {
 

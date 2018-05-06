@@ -56,6 +56,9 @@ public class MyFrgment2 extends Fragment{
     private List<Integer> selectId = new ArrayList<>();
     private boolean isDeleteMode = false; //是否多选
     private MyAdapter mAdapter;
+
+    //如果展示页面是静态的就只需要在onCreateView里面进行初始化
+    //如果是动态的显示，及改变页面上的内容，则需要在onActivityCreated里加载
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -110,9 +113,7 @@ public class MyFrgment2 extends Fragment{
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     MyData data = (MyData) list.get(i);
                     Intent intent = new Intent(getActivity(), ListShowCompleteData.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putSerializable("Infor", data);
-                    intent.putExtras(bundle);
+                    intent.putExtra("MyDataId",data.getId());
                     startActivity(intent);
             }
         });

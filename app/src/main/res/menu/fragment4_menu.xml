@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+  <item
+      android:id="@+id/item_data_with_cost_day"
+      android:title="统计当日消费"
+      app:showAsAction="never"
+      >
+  </item>
+
+  <item
+      android:id="@+id/item_data_with_salary_day"
+      android:title="统计当日收入"
+      app:showAsAction="never"
+      >
+  </item>
+    <item
+        android:id="@+id/item_data_with_month"
+        android:title="统计当月数据"
+        app:showAsAction="never"
+        >
+    </item>
+  <item
+      android:id="@+id/item_data_with_account"
+      android:title="按账户统计"
+      app:showAsAction="never"
+      >
+  </item>
+  <item
+      android:id="@+id/item_data_with_year"
+      android:title="按年统计"
+      app:showAsAction="never"
+      >
+  </item>
+
+</menu>

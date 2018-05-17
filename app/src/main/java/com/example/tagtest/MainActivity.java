@@ -16,11 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tagtest.account.Account;
+import com.example.tagtest.account.MyFragment3;
 import com.example.tagtest.home.ActivityAdd;
 import com.example.tagtest.home.MyFragmet1;
+import com.example.tagtest.tables.ActivityShowDataByMonth;
 import com.example.tagtest.tables.MyFragment4;
 import com.example.tagtest.values.ActivitySearch;
-import com.example.tagtest.account.MyFragment3;
 import com.example.tagtest.values.MyFrgment2;
 
 import org.litepal.crud.DataSupport;
@@ -227,6 +228,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                Intent newIntent=new Intent(MainActivity.this,ActivitySearch.class);
                startActivity(newIntent);
                break;
+            case R.id.item_data_with_month:
+                //线性表的展示
+                Intent showDataByMonth=new Intent(MainActivity.this,ActivityShowDataByMonth.class);
+                startActivity(showDataByMonth);
+                break;
             default:
         }
         return true;

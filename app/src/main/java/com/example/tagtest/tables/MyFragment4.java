@@ -1,202 +1,277 @@
 package com.example.tagtest.tables;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.tagtest.MyData;
+import com.bigkoo.pickerview.builder.TimePickerBuilder;
+import com.bigkoo.pickerview.listener.OnTimeSelectListener;
+import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.tagtest.R;
 import com.example.tagtest.tools.GetDate;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
-import com.github.mikephil.charting.formatter.PercentFormatter;
-import com.github.mikephil.charting.utils.ColorTemplate;
-import com.github.mikephil.charting.utils.MPPointF;
 
-import org.litepal.crud.DataSupport;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
  * Created by MyFirstPC on 2018/3/25.
  */
 
-public class MyFragment4 extends Fragment {
-    //private BarChart chat;
-    private PieChart mChart;
+public class MyFragment4 extends Fragment implements View.OnClickListener{
+    //显示当日消费数据
+    private PieChart pieChart1;
+    //显示当日收入数据
+    private PieChart pieChart2;
     private Context context;
     private Typeface test;
     private Typeface mTfLight;
     private Typeface mTfRegular;
     private GetDate date;
+    private GetTable table1;
+    private GetTable table2;
+    private ImageView toLastDay;
+    private ImageView toNextDay;
+    private TextView dayNow;
+    private DateInfor dateInfor=null;
    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fourth_fragment, container, false);
-        mChart=view.findViewById(R.id.chart);
-        inilite();
+        setHasOptionsMenu(true);
+        pieChart1=view.findViewById(R.id.pie_chart1);
+        pieChart2=view.findViewById(R.id.pie_chart2);
         return view;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        initialise();
+        GetDate date=new GetDate();
+        getTable(date.getYear(),date.getMonth(),date.getDay());
+
+   }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.fragment4_menu,menu);
+    }
+
+    @Override
+    public void onClick(View v) {
+           switch (v.getId())
+           {
+               case R.id.to_left:
+                   toLastDay(dayNow.getText().toString());
+                   if(dateInfor!=null)
+                   {
+                       if(dateInfor.getMonth()<10)
+                          dayNow.setText("0"+dateInfor.getMonth()+"月"+dateInfor.getDay()+"日");
+                       else
+                           dayNow.setText(dateInfor.getMonth()+"月"+dateInfor.getDay()+"日");
+                       getTable(dateInfor.getYear(),dateInfor.getMonth(),dateInfor.getDay());
+                   }
+                   break;
+               case R.id.to_right:
+                   toNextDay(dayNow.getText().toString());
+                   if(dateInfor!=null)
+                   {
+                       if(dateInfor.getMonth()<10)
+                           dayNow.setText("0"+dateInfor.getMonth()+"月"+dateInfor.getDay()+"日");
+                       else
+                           dayNow.setText(dateInfor.getMonth()+"月"+dateInfor.getDay()+"日");
+                       getTable(dateInfor.getYear(),dateInfor.getMonth(),dateInfor.getDay());
+                   }
+                   break;
+               case R.id.day_now:
+                   TimePickerView pvTime = new TimePickerBuilder(getActivity(), new OnTimeSelectListener() {
+                       @Override
+                       public void onTimeSelect(Date dateTemp, View v) {
+                           //date显示的是所有的数据情况，所以需要格式化输出
+                           SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy,MM,dd");
+                           String format = simpleDateFormat.format(dateTemp);
+                           String year;
+                           String month;
+                           String day;
+                           String[] temp=format.split(","); //将年，月,日拿到
+                           year=temp[0];
+                           month=temp[1];
+                           day=temp[2];
+                           Log.d("TimePicker",year+","+month+","+day);
+                           date.setYear(Integer.parseInt(temp[0]));
+                           date.setMonth(Integer.parseInt(temp[1]));
+                           date.setDay(Integer.parseInt(temp[2]));
+                           dayNow.setText(temp[1]+"月"+temp[2]+"日");
+                           dateInfor=null;
+                           dateInfor=new DateInfor(Integer.parseInt(temp[0]),Integer.parseInt(temp[1]),Integer.parseInt(temp[2]));
+                           getTable(dateInfor.getYear(),dateInfor.getMonth(),dateInfor.getDay());
+                       }
+                   }).build();
+                   pvTime.show();
+                   break;
+               default:
+                   break;
+           }
+    }
+
+    private void initialise()
+    {
+        toLastDay=(ImageView)getActivity().findViewById(R.id.to_left);
+        toNextDay=(ImageView)getActivity().findViewById(R.id.to_right);
+        dayNow=(TextView)getActivity().findViewById(R.id.day_now);
+        date=new GetDate();
+        if(date.getDay()>10)
+           dayNow.setText(date.getMonth()+"月"+date.getDay()+"日");
+        else
+            dayNow.setText("0"+date.getMonth()+"月"+date.getDay()+"日");
+        toLastDay.setOnClickListener(this);
+        toNextDay.setOnClickListener(this);
+        dayNow.setOnClickListener(this);
+    }
+    private void toLastDay(String dayNowTemp)
+    {
+       // int year=date.getYear();
+        //int month=date.getMonth();
+        //int day=date.getDay();
+        dateInfor=null;
+        String[] monthAndDay=dayNowTemp.split("月");
+        if(monthAndDay.length==2)
+        {
+            int month = Integer.parseInt(monthAndDay[0]);
+            String[] dayTemp=monthAndDay[1].split("日");
+            int day= Integer.parseInt(dayTemp[0]);
+            Log.d("MyFragment",month+","+day);
+            GetDataSomeMonth getDataSomeMonth;
+            if(day==1)
+            {
+                //一月一号前一天，年都变了
+                if(month==1)
+                {
+                    int newYear=date.getYear()-1;
+                    int newMonth=12;
+                    getDataSomeMonth=new GetDataSomeMonth(newYear+"",newMonth+"");
+                    dateInfor=new DateInfor(newYear,newMonth,getDataSomeMonth.getDayNumberOfMonth());
+                }
+                //不是一月，移动不跨年
+                else
+                {
+                    int newMonth=month-1;
+                    getDataSomeMonth=new GetDataSomeMonth(date.getYear()+"",newMonth+"");
+                    dateInfor=new DateInfor(date.getYear(),newMonth,getDataSomeMonth.getDayNumberOfMonth());
+                }
+            }
+            else
+            {
+                dateInfor=new DateInfor(date.getYear(),month,day-1);
+            }
 
 
 
+        }
+        else
+        {
+            Log.d("MyFragment4","dayNowTemp split is wrong");
+        }
 
     }
-   public void inilite() {
-       date=new GetDate();
-       mChart.setUsePercentValues(true);
-       mChart.getDescription().setEnabled(false);
-       mChart.setExtraOffsets(5, 10, 5, 5);
-
-       mChart.setDragDecelerationFrictionCoef(0.95f);
-
-       mChart.setCenterTextTypeface(mTfLight);
-      // mChart.setCenterText(generateCenterSpannableText());
-
-       mChart.setDrawHoleEnabled(true);
-       mChart.setHoleColor(Color.WHITE);
-
-       mChart.setTransparentCircleColor(Color.WHITE);
-       mChart.setTransparentCircleAlpha(110);
-
-       mChart.setHoleRadius(58f);
-       mChart.setTransparentCircleRadius(61f);
-
-       mChart.setDrawCenterText(true);
-
-       mChart.setRotationAngle(0);
-       // enable rotation of the chart by touch
-       mChart.setRotationEnabled(true);
-       mChart.setHighlightPerTapEnabled(true);
-
-       // mChart.setUnit(" €");
-       // mChart.setDrawUnitsInChart(true);
-
-       // add a selection listener
-       //mChart.setOnChartValueSelectedListener(this);
-
-       setData(4, 100);
-
-       //mChart.animateY(1400, Easing.EaseInOutQuad);
-       // mChart.spin(2000, 0, 360);
-
-       //mSeekBarX.setOnSeekBarChangeListener(this);
-       //mSeekBarY.setOnSeekBarChangeListener(this);
-
-       Legend l = mChart.getLegend();
-       l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
-       l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
-       l.setOrientation(Legend.LegendOrientation.VERTICAL);
-       l.setDrawInside(false);
-       l.setXEntrySpace(7f);
-       l.setYEntrySpace(0f);
-       l.setYOffset(0f);
-
-       // entry label styling
-       mChart.setEntryLabelColor(Color.WHITE);
-       mChart.setEntryLabelTypeface(mTfRegular);
-       mChart.setEntryLabelTextSize(12f);
-   }
-    private void setData(int count, float range) {
-
-        float mult = range;
-
-        ArrayList<PieEntry> entries = new ArrayList<PieEntry>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-        String[] type={"支出","收入"};
-        List<MyData> dataTodayCost= DataSupport.where("year=? and month=? and day=? and type=?",date.getYear()+"",date.getMonth()+"",date.getDay()+"","1").find(MyData.class);
-        Set<Test> testSet = new HashSet<>();
+    public void toNextDay(String dayNowTemp)
+    {
+        dateInfor=null;
+        String[] monthAndDay=dayNowTemp.split("月");
+        if(monthAndDay.length==2)
         {
-            for(MyData temp:dataTodayCost)
+            int month = Integer.parseInt(monthAndDay[0]);
+            String[] dayTemp=monthAndDay[1].split("日");
+            int day= Integer.parseInt(dayTemp[0]);
+            Log.d("MyFragment",month+","+day);
+            int year=date.getYear();
+            GetDataSomeMonth getDataSomeMonth=new GetDataSomeMonth(year+"",month+"");
+            if(day==getDataSomeMonth.getDayNumberOfMonth())
             {
-               Test a=new Test(temp.getTypeSelect(),temp.getMoney());
-
+                //12月最后一天，再过一天，年都变了
+                if(month==12)
+                {
+                    int newYear=date.getYear()+1;
+                    int newMonth=1;
+                    dateInfor=new DateInfor(newYear,newMonth,1);
+                }
+                //不是12月，不跨年
+                else
+                {
+                    dateInfor=new DateInfor(year,month+1,1);
+                }
+            }
+            else
+            {
+                dateInfor=new DateInfor(year,month,day+1);
             }
         }
-        /*for(int i=0;i<dataMap.size();i++) {
-
-            entries.add(new PieEntry(Float.parseFloat(),type[i++]));
-                    //mParties[i % mParties.length],
-                   // getResources().getDrawable(R.drawable.star)));
-        }*/
-
-        PieDataSet dataSet = new PieDataSet(entries, "Election Results");
-
-        dataSet.setDrawIcons(false);
-
-        dataSet.setSliceSpace(3f);
-        dataSet.setIconsOffset(new MPPointF(0, 40));
-        dataSet.setSelectionShift(5f);
-
-        // add a lot of colors
-
-        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-        for (int c : ColorTemplate.VORDIPLOM_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.JOYFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.COLORFUL_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.LIBERTY_COLORS)
-            colors.add(c);
-
-        for (int c : ColorTemplate.PASTEL_COLORS)
-            colors.add(c);
-
-        colors.add(ColorTemplate.getHoloBlue());
-
-        dataSet.setColors(colors);
-        //dataSet.setSelectionShift(0f);
-
-        PieData data = new PieData(dataSet);
-        data.setValueFormatter(new PercentFormatter());
-        data.setValueTextSize(11f);
-        data.setValueTextColor(Color.WHITE);
-        data.setValueTypeface(mTfLight);
-        mChart.setData(data);
-
-        // undo all highlights
-        mChart.highlightValues(null);
-
-        mChart.invalidate();
+        else
+        {
+            Log.d("MyFragment4","dayNowTemp split is wrong");
+        }
     }
-    class Test
+    //获取表格，重新刷新表格内容
+    public void getTable(int year,int month,int day)
     {
-        String type;
-        String money;
-        public Test(String type,String money)
+        pieChart1.clear();
+        pieChart2.clear();
+        table1=new GetTable();
+        table2=new GetTable();
+        GetDataSomeday getDataToday=new GetDataSomeday(year+"",month+"",day+"");
+        Log.d("getDataToday",getDataToday.getCostData().size()+"");
+        table1.getPieChartByToday(pieChart1,getDataToday,"今日消费信息视图",true);
+        table2.getPieChartByToday(pieChart2,getDataToday,"今日支出视图",false);
+    }
+
+    //存储日期信息，方便返回
+    class DateInfor
+    {
+        int year;
+        int month;
+        int day;
+        public DateInfor()
+        {}
+        public DateInfor(int year,int month,int day)
         {
-          this.type=type;
-          this.money=money;
-        }
-        public boolean isSame(final Test temp)
-        {
-            if(this.type.equals(temp.type))
-                return true;
-            return false;
+            this.year=year;
+            this.month=month;
+            this.day=day;
         }
 
+        public int getYear() {
+            return year;
+        }
+
+        public void setYear(int year) {
+            this.year = year;
+        }
+
+        public int getMonth() {
+            return month;
+        }
+
+        public void setMonth(int month) {
+            this.month = month;
+        }
+
+        public int getDay() {
+            return day;
+        }
+
+        public void setDay(int day) {
+            this.day = day;
+        }
     }
 }

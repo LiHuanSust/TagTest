@@ -4,4 +4,6 @@
     <string name="spinner_name">请选择银行</string>
     <string name="button_save">保存</string>
     <string name="button_clear">清空</string>
+    <string name="cost_month">本月支出:</string>
+    <string name="salary_month">本月收入:</string>
 </resources>

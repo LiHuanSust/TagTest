@@ -43,4 +43,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.7'
     implementation files('libs/Sunflower.jar')
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    implementation files('libs/jxl-2.6.12.jar')
 }

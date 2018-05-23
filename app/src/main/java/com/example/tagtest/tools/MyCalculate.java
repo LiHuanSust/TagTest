@@ -34,6 +34,13 @@ public class MyCalculate {
     {
         BigDecimal x=new BigDecimal(a);
         BigDecimal y=new BigDecimal(b);
-        return x.divide(y).toString();
+        //第二个参数为小数位数，第三个参数为小数模式，
+        //ROUND_HALF_DOWN
+        //若舍弃部分> .5，则作 ROUND_UP；否则，作 ROUND_DOWN 。
+        //ROUND_DOWN :
+        //从不在舍弃(即截断)的小数之前增加数字
+        //ROUND_UP:
+        //总是在非 0 舍弃小数(即截断)之前增加数字。
+        return x.divide(y,10,BigDecimal.ROUND_HALF_DOWN).toString();
     }
 }

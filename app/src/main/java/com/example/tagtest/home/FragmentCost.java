@@ -397,8 +397,8 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
                         int accountNum = accountInformation.getNum() + 1;
                         accountInformation.setCost(accountCost);
                         accountInformation.setMoney(accountMoney);
-                        accountInformation.setNum(accountNum);
                         accountInformation.setDateAdd(date);
+                        accountInformation.setNum(accountNum);
                         if (accountInformation.save()) {
                             Log.d("Right", accountInformation.getId()+"");
                             Toast.makeText(getActivity(), "保存成功！", Toast.LENGTH_SHORT).show();
@@ -679,36 +679,3 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         useXunFei.destory();
     }
 }
-
-
- /*if(myData.save())
-                    {
-                        //Account里面添加相应的data数据
-                        mAccount.getList().add(myData);
-                        AccountInformation accountInformation=mAccount.getAccountInformation();
-                        float accountCost=accountInformation.getCost()+Money;
-                        float accountMoney=accountInformation.getMoney()-accountCost;
-                        int num=accountInformation.getNum()+1;
-                        Log.d("Test",accountCost+"||"+accountMoney);
-                        accountInformation.setCost(accountCost);
-                        accountInformation.setMoney(accountMoney);
-                        accountInformation.setNum(num);
-                        accountInformation.setDateAdd(date);
-                        if(accountInformation.save() && mAccount.save())
-                        {
-                            Toast.makeText(getActivity(),"保存成功！",Toast.LENGTH_SHORT).show();
-                            clearValue();
-                        }
-                         else
-                            Toast.makeText(getActivity(),"关联表更新失败！",Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                        Toast.makeText(getActivity(),"数据保存失败",Toast.LENGTH_SHORT).show();
-
-                    break;
-                }
-                else
-                {
-                    Toast.makeText(getActivity(),"请将数据填写完整",Toast.LENGTH_SHORT).show();
-                    break;
-                }*/

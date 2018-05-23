@@ -58,10 +58,18 @@ public class MyFragment4 extends Fragment implements View.OnClickListener{
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initialise();
-        GetDate date=new GetDate();
+        date=new GetDate();
         getTable(date.getYear(),date.getMonth(),date.getDay());
 
    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getTable(date.getYear(),date.getMonth(),date.getDay());
+
+    }
+
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();

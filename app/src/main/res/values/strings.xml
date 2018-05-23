@@ -6,4 +6,6 @@
     <string name="button_clear">清空</string>
     <string name="cost_month">本月支出:</string>
     <string name="salary_month">本月收入:</string>
+    <string name="cost_year">年支出:</string>
+    <string name="salary_year">年收入:</string>
 </resources>

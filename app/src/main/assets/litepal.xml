@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <litepal>
     <dbname value="MyDB"></dbname>
-    <version value="20"></version>
+    <version value="22"></version>
     <list>
         <mapping class="com.example.tagtest.MyData"></mapping>
         <mapping class="com.example.tagtest.account.Account"></mapping>

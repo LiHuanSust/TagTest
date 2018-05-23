@@ -15,7 +15,7 @@ public class AccountInformation extends DataSupport{
     private String cost; //记录总支出
     private String salary; //记录总收入
     private String money; //账户净资产
-    private int num; //记录消费次数
+    private int num; //记录使用次数
     private boolean isCard; //标志位判断是不是银行卡 。。。
     private Account account; //一对一关系
 

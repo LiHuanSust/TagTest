@@ -9,14 +9,20 @@ import android.util.Log;
 import android.widget.TextView;
 
 import com.example.tagtest.R;
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
 import com.github.mikephil.charting.components.MarkerView;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -26,6 +32,7 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.github.mikephil.charting.utils.Utils;
@@ -44,6 +51,7 @@ public class GetTable {
     private Typeface mTfRegular;
     private PieChart pieChart;
     private LineChart lineChart;
+    private BarChart barChart;
     private String money;
     private Activity activity;
     private ArrayList<String> xLabel = new ArrayList<>();
@@ -73,9 +81,9 @@ public class GetTable {
         pieChart.setUsePercentValues(true);
         pieChart.getDescription().setEnabled(false);
         pieChart.setExtraOffsets(5, 10, 5, 5);
-
         pieChart.setDragDecelerationFrictionCoef(0.95f);
-
+        //只显示百分比，不显示其名字
+        pieChart.setDrawSliceText(false);
         pieChart.setCenterTextTypeface(mTfLight);
 
         pieChart.setDrawHoleEnabled(true);
@@ -142,6 +150,8 @@ public class GetTable {
 
         dataSet.setColors(getColors());
         //dataSet.setSelectionShift(0f);
+        //设置饼图数据标识是否在圆外显示
+        //dataSet.setYValuePosition(PieDataSet.ValuePosition.OUTSIDE_SLICE);
 
         PieData data = new PieData(dataSet);
         data.setValueFormatter(new PercentFormatter());
@@ -270,9 +280,348 @@ public class GetTable {
         // dont forget to refresh the drawing
         mChart.invalidate();
       }
+    public void getBarChatByAccount(BarChart mChart,ArrayList<GetDataByAccount.AccountDataBase> data)
+    {
+        if(data==null)
+        {
+            mChart.setNoDataText("当月没有数据哦~");
+            return;
+        }
+        mChart.setDrawBarShadow(false);
+        mChart.setDrawValueAboveBar(true);
+        Description description=new Description();
+        description.setText("当月各账户使用情况（单位：元）");
+        mChart.setDescription(description);
+        //mChart.getDescription().setEnabled(false);
+       // mChart.setContentDescription("单位：元");
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart.setMaxVisibleValueCount(60);
 
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        mChart.setDrawGridBackground(false);
+        // mChart.setDrawYLabels(false);
+
+       // IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setAxisMaximum(0);
+        xAxis.setAxisMaximum(12);
+        xAxis.setTypeface(mTfLight);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+        //xAxis.setLabelCount(7);
+        //xAxis.setValueFormatter(xAxisFormatter);
+
+        //IAxisValueFormatter custom = new MyAxisValueFormatter();
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setTypeface(mTfLight);
+        leftAxis.setLabelCount(8, false);
+        //leftAxis.setValueFormatter(custom);
+        leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        leftAxis.setSpaceTop(15f);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setEnabled(false);
+        rightAxis.setTypeface(mTfLight);
+        //rightAxis.setLabelCount(8, false);
+        //rightAxis.setValueFormatter(custom);
+        //rightAxis.setSpaceTop(15f);
+        //rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        Legend l = mChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setForm(Legend.LegendForm.SQUARE);
+        l.setFormSize(9f);
+        l.setTextSize(11f);
+        l.setXEntrySpace(4f);
+
+
+
+        ArrayList<BarEntry> yValues1 = new ArrayList<BarEntry>(); //存放消费数据
+        ArrayList<BarEntry> yValues2=new ArrayList<>(); //存放收入数据
+        final ArrayList<String> xValues=new ArrayList<>(); //存放账户名
+         int num=0;
+         for(GetDataByAccount.AccountDataBase tempAccountData:data)
+         {
+             Log.d("TempName",tempAccountData.name);
+             xValues.add(tempAccountData.name);
+             yValues1.add(new BarEntry(num,Float.parseFloat(tempAccountData.costMoney)));
+             yValues2.add(new BarEntry(num,100+num*num));
+             num++;
+         }
+
+        BarDataSet costSet,salarySet;
+
+
+
+        if (mChart.getData() != null &&
+                mChart.getData().getDataSetCount() > 0) {
+            costSet = (BarDataSet) mChart.getData().getDataSetByIndex(0);
+            salarySet=(BarDataSet)mChart.getData().getDataSetByIndex(1);
+            costSet.setValues(yValues1);
+            salarySet.setValues(yValues2);
+            mChart.getData().notifyDataChanged();
+            mChart.notifyDataSetChanged();
+        } else {
+            costSet = new BarDataSet(yValues1, "消费");
+            costSet.setDrawIcons(false);
+            //红色
+            costSet.setColors(Color.rgb(255, 102, 0));
+            //costSet.setBarBorderWidth(2f);
+            salarySet=new BarDataSet(yValues2,"收入");
+            salarySet.setDrawIcons(false);
+            //绿色
+            salarySet.setColors(Color.rgb(104, 241, 175));
+            //salarySet.setBarBorderWidth(2f);
+            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            dataSets.add(costSet);
+            dataSets.add(salarySet);
+
+            BarData barData = new BarData(dataSets);
+            barData.setValueTextSize(10f);
+            //barData.setValueTypeface(mTfLight);
+            //barData.setBarWidth(0.2f);
+            mChart.setData(barData);
+        }
+        float groupSpace=0.24f;
+        float barSpace=0.1f; //*2
+        float barWidth=0.28f;//*2
+        //0.24+0.1*2+0.28*2=1.0
+        mChart.getXAxis().setAxisMinimum(0);
+
+        // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
+        mChart.getXAxis().setAxisMaximum(0 + mChart.getBarData().getGroupWidth(groupSpace, barSpace) * num);
+        mChart.groupBars(0, groupSpace, barSpace);
+        mChart.animateXY(1000,1400);
+        //mChart.groupBars(0,0.28f,0.12f);
+        //x轴坐标内容设置
+        mChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            int len=0;
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+               float tempValue=value;
+                int temp=(int)value;
+                //从0开始，奇数显示，1，3/
+                if(temp==1)  //如果只含有2个的话，就会出现1%2==1的情况，所以手动设置坐标1下面的显示
+                    return xValues.get(0);
+                if(temp%2!=0)
+                  return xValues.get(temp%xValues.size());
+                return "";
+
+            }
+        });
+        mChart.invalidate();
+
+
+    }
+    public void getHorizontalBarChart(HorizontalBarChart mChart, List<GetDataByAccount.AccountHorizontalDataBase> dataList) {
+        if (dataList == null) {
+            mChart.setNoDataText("当月没有数据哦~");
+            return;
+        }
+        mChart.setDrawBarShadow(false);
+        mChart.setDrawValueAboveBar(true);
+        Description description = new Description();
+        description.setText("各账户统计（单位：元/次）");
+        mChart.setDescription(description);
+        //mChart.getDescription().setEnabled(false);
+        // mChart.setContentDescription("单位：元");
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        mChart.setDrawGridBackground(false);
+        mChart.animateY(2500);
+        // mChart.setDrawYLabels(false);
+
+        // IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        final ArrayList<String> xValues=new ArrayList<>();
+        for(GetDataByAccount.AccountHorizontalDataBase temp:dataList)
+        {
+            xValues.add(temp.name);
+        }
+        //设置x轴字体显示角度，-60表示逆时针旋转60度
+        //xAxis.setLabelRotationAngle(-60);
+       // xAxis.setAxisMaximum(0);
+       // xAxis.setAxisMaximum(6);
+        xAxis.setTypeface(mTfLight);
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+        //xAxis.setSpaceMin(0.25f);
+        //xAxis.setLabelCount(7);
+        //xAxis.setValueFormatter(xAxisFormatter);
+
+        //IAxisValueFormatter custom = new MyAxisValueFormatter();
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setTypeface(mTfLight);
+        leftAxis.setLabelCount(6, false);
+        //leftAxis.setValueFormatter(custom);
+        //leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        //leftAxis.setSpaceTop(15f);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setEnabled(false);
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                int x=(int)value;
+                return xValues.get(x%xValues.size());
+            }
+        });
+        //rightAxis.setLabelCount(8, false);
+        //rightAxis.setValueFormatter(custom);
+        //rightAxis.setSpaceTop(15f);
+        //rightAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+
+        Legend l = mChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setForm(Legend.LegendForm.SQUARE);
+        l.setFormSize(9f);
+        l.setTextSize(11f);
+        l.setXEntrySpace(4f);
+
+        float barWidth = 0.35f;
+        ArrayList<BarEntry> yVals1 = new ArrayList<BarEntry>();
+
+        for (int i = 0; i < dataList.size(); i++) {
+            yVals1.add(new BarEntry(i, dataList.get(i).num));
+        }
+
+        BarDataSet set1;
+
+        if (mChart.getData() != null &&
+                mChart.getData().getDataSetCount() > 0) {
+            set1 = (BarDataSet) mChart.getData().getDataSetByIndex(0);
+            set1.setValues(yVals1);
+            mChart.getData().notifyDataChanged();
+            mChart.notifyDataSetChanged();
+        } else {
+            set1 = new BarDataSet(yVals1, "DataSet 1");
+
+            set1.setDrawIcons(false);
+            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            dataSets.add(set1);
+
+            BarData data = new BarData(dataSets);
+            data.setValueTextSize(10f);
+            data.setValueTypeface(mTfLight);
+            data.setBarWidth(barWidth);
+            mChart.setData(data);
+        }
+       // mChart.setFitBars(true);
+        mChart.invalidate();
+
+    }
+    public void getBarChartWithYear(BarChart mChart, List<GetDataByYear.ShowDataByYearDataBase> dataList,String descriptText)
+    {
+        if(dataList==null)
+        {
+            mChart.setNoDataText("真厉害，这一年都没有花一分钱哦~");
+            return;
+        }
+        setBarChart(mChart,descriptText);
+        final ArrayList<String> xValues=new ArrayList<>();
+        ArrayList<BarEntry> costValues=new ArrayList<>();
+        ArrayList<BarEntry> salaryValues=new ArrayList<>();
+        int i=2;
+        for(GetDataByYear.ShowDataByYearDataBase tempData:dataList)
+        {
+            xValues.add(tempData.getMonth()+"月");
+            costValues.add(new BarEntry(i,/*Float.parseFloat(tempData.getCostMoney())*/500*i+5));
+            salaryValues.add(new BarEntry(i,/*Float.parseFloat(tempData.getSalaryMoney()*/1000*i+i));
+            i++;
+        }
+        mChart.getXAxis().setLabelCount(12);
+        //mChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(xValues));
+        mChart.getXAxis().setCenterAxisLabels(true);
+         mChart.getXAxis().setValueFormatter(new IAxisValueFormatter() {
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                Log.d("Values","value="+value);
+                /*if(value<2)
+                    return "";*/
+                int temp=((int)value-2)/2;
+                if(temp==0)
+                {
+                    return xValues.get(0);
+                }
+                if(temp<0 || temp>12)
+                    return "";
+                return xValues.get(temp%xValues.size());
+               //return xValues.get(((int)value-1)%xValues.size());
+            }
+        });
+        BarDataSet costSet,salarySet;
+        if (mChart.getData() != null && mChart.getData().getDataSetCount() > 0) {
+            costSet = (BarDataSet) mChart.getData().getDataSetByIndex(0);
+            salarySet=(BarDataSet)mChart.getData().getDataSetByIndex(1);
+            costSet.setValues(costValues);
+            salarySet.setValues(salaryValues);
+            mChart.getData().notifyDataChanged();
+            mChart.notifyDataSetChanged();
+        } else {
+            costSet = new BarDataSet(costValues, "消费");
+            costSet.setDrawIcons(false);
+            //红色
+            costSet.setColors(Color.rgb(255, 102, 0));
+            //costSet.setBarBorderWidth(2f);
+            salarySet=new BarDataSet(salaryValues,"收入");
+            salarySet.setDrawIcons(false);
+            //绿色
+            salarySet.setColors(Color.rgb(104, 241, 175));
+            //salarySet.setBarBorderWidth(2f);
+            ArrayList<IBarDataSet> dataSets = new ArrayList<IBarDataSet>();
+            dataSets.add(costSet);
+            dataSets.add(salarySet);
+
+            BarData barData = new BarData(dataSets);
+            barData.setValueTextSize(10f);
+            //barData.setValueTypeface(mTfLight);
+            //barData.setBarWidth(0.2f);
+            mChart.setData(barData);
+        }
+        float groupSpace=0.16f;
+        float barSpace=0.07f; //*2
+        float barWidth=0.35f;//*2
+        //0.24+0.1*2+0.28*2=1.0
+        //mChart.getXAxis().setAxisMinimum(0);
+        //mChart.getXAxis().setAxisMaximum(26);
+
+        // barData.getGroupWith(...) is a helper that calculates the width each group needs based on the provided parameters
+       // mChart.getXAxis().setAxisMaximum(1+ mChart.getBarData().getGroupWidth(groupSpace, barSpace) * 12);
+        //从2开始是因为每组有2个数据，而且这与x轴下方怎么显示标签密切相关
+        //因为上面添加数据的时候，i也是从2开始的
+        //主要因为0，1除以2都为0的缘故。。具体也不知道为啥，反正是试出来的
+        mChart.groupBars(2, groupSpace, barSpace);
+        mChart.getBarData().setBarWidth(barWidth);
+        mChart.getXAxis().setAxisMinimum(2);
+        mChart.getXAxis().setAxisMaximum(dataList.size()*2+2);
+        mChart.invalidate();
+
+    }
     private void setData() {
-
         ArrayList<Entry> entries1 = new ArrayList<Entry>();
         ArrayList<Entry> entries2 = new ArrayList<Entry>();
         List<String> costDataList=lineChartData.getCostData();
@@ -297,19 +646,19 @@ public class GetTable {
         LineDataSet set2=new LineDataSet(entries2,"收入数据");
         set1.setLineWidth(1.5f);
         set1.setCircleRadius(4f);
-        set1.setColor(Color.RED);
-        set1.setCircleColor(Color.RED);
+        set1.setColor(Color.rgb(255, 102, 0));
+        set1.setCircleColor(Color.rgb(255, 102, 0));
         set2.setLineWidth(1.5f);
         set2.setCircleRadius(4f);
-        set2.setColor(Color.GREEN);
-        set2.setCircleColor(Color.GREEN);
+        //这种绿色与红色看起来好点，没有那么刺眼
+        set2.setColor(Color.rgb(104, 241, 175));
+        set2.setCircleColor(Color.rgb(104, 241, 175));
         // create a data object with the datasets
         LineData data = new LineData(set1);
         data.addDataSet(set2);
         // set data
         lineChart.setData(data);
     }
-
     private SpannableString generateCenterSpannableText(String describe) {
 
         SpannableString s = new SpannableString(describe);
@@ -321,12 +670,9 @@ public class GetTable {
         s.setSpan(new ForegroundColorSpan(ColorTemplate.getHoloBlue()), s.length() - 14, s.length(), 0);*/
         return s;
     }
-   private ArrayList<Integer> getColors()
-   {
+    private ArrayList<Integer> getColors()
+    {
        ArrayList<Integer> colors = new ArrayList<Integer>();
-
-       for (int c : ColorTemplate.VORDIPLOM_COLORS)
-           colors.add(c);
 
        for (int c : ColorTemplate.JOYFUL_COLORS)
            colors.add(c);
@@ -339,10 +685,79 @@ public class GetTable {
 
        for (int c : ColorTemplate.PASTEL_COLORS)
            colors.add(c);
-
+        for (int c : ColorTemplate.VORDIPLOM_COLORS)
+            colors.add(c);
        colors.add(ColorTemplate.getHoloBlue());
        return colors;
    }
+    private void setBarChart(BarChart mChart,String descriptText)
+    {
+        /*
+        * @param mChart 需要设置的图表
+        * @param descriptText 表的描述语句
+        * barChart的基本设置
+        *背景，网格线，及x轴，y轴的设置
+        *该函数是barChart公共属性的设置，提高代码的复用性
+        */
+        mChart.setDrawBarShadow(false);
+        mChart.setDrawValueAboveBar(true);
+        Description description = new Description();
+        description.setText(descriptText);
+        mChart.setDescription(description);
+        //mChart.getDescription().setEnabled(false);
+        // mChart.setContentDescription("单位：元");
+        // if more than 60 entries are displayed in the chart, no values will be
+        // drawn
+        mChart.setMaxVisibleValueCount(60);
+
+        // scaling can now only be done on x- and y-axis separately
+        mChart.setPinchZoom(false);
+
+        mChart.setDrawGridBackground(false);
+        mChart.animateY(2500);
+        // mChart.setDrawYLabels(false);
+
+        // IAxisValueFormatter xAxisFormatter = new DayAxisValueFormatter(mChart);
+
+        XAxis xAxis = mChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        //设置x轴字体显示角度，-60表示逆时针旋转60度
+        //xAxis.setLabelRotationAngle(-60);
+        // xAxis.setAxisMaximum(0);
+        // xAxis.setAxisMaximum(6);
+        xAxis.setTypeface(mTfLight);
+        xAxis.setDrawGridLines(true);
+        xAxis.setGranularity(1f); // only intervals of 1 day
+        xAxis.setCenterAxisLabels(true);
+        //xAxis.setSpaceMin(0.25f);
+        //xAxis.setLabelCount(7);
+        //xAxis.setValueFormatter(xAxisFormatter);
+
+        //IAxisValueFormatter custom = new MyAxisValueFormatter();
+
+        YAxis leftAxis = mChart.getAxisLeft();
+        leftAxis.setTypeface(mTfLight);
+        leftAxis.setLabelCount(6, false);
+        //leftAxis.setValueFormatter(custom);
+        //leftAxis.setPosition(YAxis.YAxisLabelPosition.OUTSIDE_CHART);
+        //leftAxis.setSpaceTop(15f);
+        leftAxis.setAxisMinimum(0f); // this replaces setStartAtZero(true)
+        YAxis rightAxis = mChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setEnabled(false);
+
+        //图例的设置
+        Legend l = mChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setForm(Legend.LegendForm.SQUARE);
+        l.setFormSize(9f);
+        l.setTextSize(11f);
+        l.setXEntrySpace(4f);
+
+    }
 }
 class MyMarkerView extends MarkerView {
         private TextView tvContent;

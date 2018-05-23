@@ -69,7 +69,7 @@
     </com.github.mikephil.charting.charts.PieChart>
         <com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pie_chart2"
-            android:layout_width="match_parent"
+            android:layout_width="450dp"
             android:layout_height="450dp"
            >
 

@@ -2,6 +2,7 @@ package com.example.tagtest.tables;
 
 import com.example.tagtest.MyData;
 import com.example.tagtest.account.AccountInformation;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.MyCalculate;
 
 import org.litepal.crud.DataSupport;
@@ -37,8 +38,8 @@ public class GetDataByAccount{
     public ArrayList<AccountDataBase> getData()
     {
         ArrayList<AccountDataBase> dataList=null;
-        List<AccountInformation> accountInformationList= DataSupport.findAll(AccountInformation.class);
-        List<MyData> myDataList=DataSupport.where("year=? and month=?",year,month).find(MyData.class);
+        List<AccountInformation> accountInformationList= DataSupport.where("user=?",User.getNowUserName()).find(AccountInformation.class);
+        List<MyData> myDataList=DataSupport.where("user=? and year=? and month=?", User.getNowUserName(),year,month).find(MyData.class);
         accountNum=accountInformationList.size();
         Map<Long,AccountDataBase> dataBaseMap;
         if(myDataList.size()!=0) {
@@ -77,9 +78,9 @@ public class GetDataByAccount{
     }
     public List<AccountHorizontalDataBase> getHorbiziontalData()
     {
-      MyData dataCostMax=DataSupport.order("money desc").where("type=?","1").findFirst(MyData.class);
-      MyData dataSalaryMax=DataSupport.order("money desc").where("type=?","0").findFirst(MyData.class);
-      List<AccountInformation> accountInformations=DataSupport.findAll(AccountInformation.class);
+      MyData dataCostMax=DataSupport.order("money desc").where("user=? and type=?",User.getNowUserName(),"1").findFirst(MyData.class);
+      MyData dataSalaryMax=DataSupport.order("money desc").where("user=? and type=?",User.getNowUserName(),"0").findFirst(MyData.class);
+      List<AccountInformation> accountInformations=DataSupport.where("user=?",User.getNowUserName()).find(AccountInformation.class);
       //计算所有的花费与收入
         for(AccountInformation tempAccountInfor:accountInformations)
         {

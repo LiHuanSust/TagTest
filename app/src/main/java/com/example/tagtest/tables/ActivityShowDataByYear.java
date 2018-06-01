@@ -1,17 +1,16 @@
 package com.example.tagtest.tables;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.tagtest.R;
+import com.example.tagtest.tools.ActivityCollector;
 import com.example.tagtest.tools.GetDate;
 import com.github.mikephil.charting.charts.BarChart;
 
@@ -32,10 +31,7 @@ public class ActivityShowDataByYear extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_data_by_year);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            WindowManager.LayoutParams localLayoutParams = getWindow().getAttributes();
-            localLayoutParams.flags = (WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS | localLayoutParams.flags);
-        }
+        ActivityCollector.addActivity(this);
         initialise();
         GetDataByYear getDataByYear=new GetDataByYear(dateNow.getYear()+"");
         getTable=new GetTable();
@@ -83,5 +79,11 @@ public class ActivityShowDataByYear extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }

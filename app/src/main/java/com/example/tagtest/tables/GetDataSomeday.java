@@ -1,6 +1,7 @@
 package com.example.tagtest.tables;
 
 import com.example.tagtest.MyData;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.MyCalculate;
 
 import org.litepal.crud.DataSupport;
@@ -35,7 +36,7 @@ public class GetDataSomeday implements GetData {
         Map<String,DataBase> mapList=new HashMap<>();
         //根据当前时间查询消费数据
         //true or false在数据库中是以1和0存储的
-        List<MyData> dataTodayCost= DataSupport.where("year=? and month=? and day=? and type=?",year,
+        List<MyData> dataTodayCost= DataSupport.where("user=? and year=? and month=? and day=? and type=?", User.getNowUserName(),year,
                 month,day,"1").find(MyData.class);
         if(dataTodayCost.size()==0)
             return mapList;
@@ -63,7 +64,7 @@ public class GetDataSomeday implements GetData {
         Map<String,DataBase> mapList=new HashMap<>();
         //根据当前时间查询消费数据
         //true or false在数据库中是以1和0存储的
-        List<MyData> dataTodayCost= DataSupport.where("year=? and month=? and day=? and type=?",year,
+        List<MyData> dataTodayCost= DataSupport.where("user=? and year=? and month=? and day=? and type=?",User.getNowUserName(),year,
                 month,day,"0").find(MyData.class);
         if(dataTodayCost.size()==0)
             return mapList;

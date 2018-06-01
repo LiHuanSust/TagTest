@@ -13,7 +13,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tagtest.R;
+import com.example.tagtest.drawer.User;
+import com.example.tagtest.tools.ActivityCollector;
 import com.example.tagtest.tools.GetDate;
+
+import org.litepal.crud.DataSupport;
 
 /*
 * 普通账户内容完善Activity
@@ -32,6 +36,7 @@ public class CompleteAccountCommon extends AppCompatActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_account_common);
+        ActivityCollector.addActivity(this);
         initialise();
         mAccountSelect=(AccountSelect)getIntent().getSerializableExtra("AccountSelect");
         accountType.setText(mAccountSelect.getName());
@@ -88,39 +93,46 @@ public class CompleteAccountCommon extends AppCompatActivity implements View.OnC
                }
                else
                {
-                   //AccountInformation依赖与Account,所以先保存AccountInformation再保存Account；
-                   //判断是否保存成功
-                   boolean accountInforSave,accountSave;
-                   Account mAccount = new Account();
-                   mAccount.setUser("L.H");
-                   mAccount.setAccountName(name);
-                   mAccount.setType(mAccountSelect.getName());
-                   mAccount.setAccoutPicId(mAccountSelect.getPicId());
-                 //  mAccount.setAccountInformation(mAccountInformation);
-                   accountSave=mAccount.save();
-                   AccountInformation mAccountInformation = new AccountInformation();
-                   mAccountInformation.setAccountName(name);
-                   mAccountInformation.setRemarks(mRemarks);
-                   mAccountInformation.setDate(new GetDate().allToString());
-                   Log.d("Test",money);
-                   mAccountInformation.setMoney(money);
-                   mAccountInformation.setCost("0");
-                   mAccountInformation.setSalary("0");
-                   mAccountInformation.setNum(0);
-                   mAccountInformation.setDateAdd("无");
-                   //标志位，在common里都设为false;
-                   mAccountInformation.setCard(false);
-                   mAccountInformation.setAccount(mAccount);
-                   accountInforSave=mAccountInformation.save();
-                   if(accountInforSave && accountSave)
+                   //查询当前账户是否已经存在
+                   Account account= DataSupport.where("accountName=?",name).findFirst(Account.class);
+                   if(account!=null)
                    {
-                       Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
-                       clearValue();
-                       break;
+                       Toast.makeText(CompleteAccountCommon.this,"账户名已存在！！！",Toast.LENGTH_SHORT).show();
                    }
+                   //同名账户不存在
                    else
-                   {
-                       Toast.makeText(this,"一些问题发生，导致出错了！！！",Toast.LENGTH_SHORT).show();
+                       {//AccountInformation依赖与Account,所以先保存AccountInformation再保存Account；
+                       //判断是否保存成功
+                       boolean accountInforSave, accountSave;
+                       Account mAccount = new Account();
+                       mAccount.setUser(User.getNowUserName());
+                       mAccount.setAccountName(name);
+                       mAccount.setType(mAccountSelect.getName());
+                       mAccount.setAccoutPicId(mAccountSelect.getPicId());
+                       //  mAccount.setAccountInformation(mAccountInformation);
+                       accountSave = mAccount.save();
+                       AccountInformation mAccountInformation = new AccountInformation();
+                       mAccountInformation.setAccountName(name);
+                       mAccountInformation.setUser(User.getNowUserName());
+                       mAccountInformation.setRemarks(mRemarks);
+                       mAccountInformation.setDate(new GetDate().allToString());
+                       Log.d("Test", money);
+                       mAccountInformation.setMoney(money);
+                       mAccountInformation.setCost("0");
+                       mAccountInformation.setSalary("0");
+                       mAccountInformation.setNum(0);
+                       mAccountInformation.setDateAdd("无");
+                       //标志位，在common里都设为false;
+                       mAccountInformation.setCard(false);
+                       mAccountInformation.setAccount(mAccount);
+                       accountInforSave = mAccountInformation.save();
+                       if (accountInforSave && accountSave) {
+                           Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+                           clearValue();
+                           break;
+                       } else {
+                           Toast.makeText(this, "一些问题发生，导致出错了！！！", Toast.LENGTH_SHORT).show();
+                       }
                    }
                    break;
                    //噗~~~直接用sqlite3命令行删并不级联执行。。。无语凝噎啊啊啊啊啊
@@ -131,5 +143,11 @@ public class CompleteAccountCommon extends AppCompatActivity implements View.OnC
                    //break;
                }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }

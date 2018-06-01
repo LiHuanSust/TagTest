@@ -10,6 +10,7 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.tagtest.R;
+import com.example.tagtest.tools.ActivityCollector;
 import com.example.tagtest.tools.GetDate;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -34,6 +35,7 @@ public class ActivityShowDataByAccount extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_data_by_account);
+        ActivityCollector.addActivity(this);
         initialise();
         GetTable getTable=new GetTable();
         GetDataByAccount getDataByAccount=new GetDataByAccount(dateNow.getYear()+"",dateNow.getMonth()+"");
@@ -94,5 +96,11 @@ public class ActivityShowDataByAccount extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }

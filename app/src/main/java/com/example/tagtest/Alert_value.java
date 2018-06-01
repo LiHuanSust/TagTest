@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
+import com.example.tagtest.tools.ActivityCollector;
 import com.example.tagtest.tools.GetDate;
 
 import java.text.SimpleDateFormat;
@@ -53,6 +54,7 @@ public class Alert_value extends AppCompatActivity implements View.OnClickListen
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alert_value);
+        ActivityCollector.addActivity(this);
         initialise();
         costTypeSelect();
         data=(MyData)getIntent().getSerializableExtra("Infor");
@@ -296,6 +298,12 @@ public class Alert_value extends AppCompatActivity implements View.OnClickListen
                 button.setSelected(false);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }
 

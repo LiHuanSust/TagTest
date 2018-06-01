@@ -16,6 +16,7 @@ import com.example.tagtest.MyData;
 import com.example.tagtest.R;
 import com.example.tagtest.account.Account;
 import com.example.tagtest.account.AccountInformation;
+import com.example.tagtest.tools.ActivityCollector;
 import com.example.tagtest.tools.MyCalculate;
 
 import org.litepal.crud.DataSupport;
@@ -44,6 +45,7 @@ public class ListShowCompleteData extends AppCompatActivity implements View.OnCl
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_show_complete_data);
+        ActivityCollector.addActivity(this);
         initialise();
         setListener();
         setSupportActionBar(toolbar);
@@ -249,4 +251,9 @@ public class ListShowCompleteData extends AppCompatActivity implements View.OnCl
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
+    }
 }

@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.example.tagtest.DataAdapter;
 import com.example.tagtest.MyData;
 import com.example.tagtest.R;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.GetDate;
 import com.example.tagtest.tools.MyCalculate;
 import com.example.tagtest.values.ListShowCompleteData;
@@ -36,15 +37,17 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     private String cost="0";
     private String salary="0";
     private GetDate dateNow; //当前时间
+    private String userName;//当前用户名
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
         View view=inflater.inflate(R.layout.first_fragment,container,false);
+        userName= User.getNowUserName();
       //  data_show_list=(ListView)getActivity().findViewById(R.id.list_today_data);
         data_show_list=(ListView)view.findViewById(R.id.list_today_data);
         dateNow=new GetDate();
         //DataSupport方法会返回一个arrayList,它不会为空
-        list= DataSupport.where("year=? and month=? and day=?",dateNow.getYear()+
+        list= DataSupport.where("user=? and year=? and month=? and day=?",userName,dateNow.getYear()+
                 "",dateNow.getMonth()+"",dateNow.getDay()+"").order("id desc").find(MyData.class);
         DataAdapter adapter=new DataAdapter(getActivity(),R.layout.list_view_basic_show,list);
         for(MyData temp:list)
@@ -114,7 +117,7 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     }
     public void getTodayListView() //获得每日消费情况，按添加顺序倒序
     {
-        list= DataSupport.where("year=? and month=? and day=?",dateNow.getYear()+
+        list= DataSupport.where("user=? and year=? and month=? and day=?",userName,dateNow.getYear()+
                 "",dateNow.getMonth()+"",dateNow.getDay()+"").order("id desc").find(MyData.class);
         cost="0";
         salary="0";

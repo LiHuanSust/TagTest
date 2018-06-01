@@ -8,6 +8,7 @@ import org.litepal.crud.DataSupport;
 
 public class AccountInformation extends DataSupport{
     private long id;
+    private String user;//用户名，方便查找
     private String accountName; //主键
     private String dateAdd;  //最近一笔消费时间
     private String date;  //账户创建时间
@@ -25,6 +26,14 @@ public class AccountInformation extends DataSupport{
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public String getAccountName() {

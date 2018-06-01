@@ -19,11 +19,6 @@
         android:title="@string/load_data"
         />
     <item
-        android:id="@+id/download_data"
-        android:icon="@drawable/dinner"
-        android:title="@string/download_data"
-        />
-    <item
         android:id="@+id/push_data"
         android:icon="@drawable/dinner"
         android:title="@string/push_data"

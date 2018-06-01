@@ -1,6 +1,7 @@
 package com.example.tagtest;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -20,12 +21,17 @@ import android.widget.Toast;
 import com.example.tagtest.account.Account;
 import com.example.tagtest.account.MyFragment3;
 import com.example.tagtest.drawer.ActivityExportData;
+import com.example.tagtest.drawer.ActivityLogin;
+import com.example.tagtest.drawer.ActivityUserInfor;
+import com.example.tagtest.drawer.ActivityloadFile;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.home.ActivityAdd;
 import com.example.tagtest.home.MyFragmet1;
 import com.example.tagtest.tables.ActivityShowDataByAccount;
 import com.example.tagtest.tables.ActivityShowDataByMonth;
 import com.example.tagtest.tables.ActivityShowDataByYear;
 import com.example.tagtest.tables.MyFragment4;
+import com.example.tagtest.tools.ActivityCollector;
 import com.example.tagtest.values.ActivitySearch;
 import com.example.tagtest.values.MyFrgment2;
 
@@ -46,12 +52,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private MyFragment4 myFragment4; //图表展示页
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
-    static final String USER_NAME="Hello";
+    private static String USER_NAME="temp";
+    //存放user信息的sharedPreference的文件名
+    private static final String USER_URL="userData";
+    private String user;
+    private TextView userAccount; //显示drawerLayout中的账号登录信息
+    //drawerLayout中的图片
+    private de.hdodenhof.circleimageview.CircleImageView userPicture;
+
+
+
  //   private boolean flag=false; //判断需不需要重新加载数据
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        user=getIntent().getStringExtra("UserName");
+        //如果是被另一个活动唤起的
+       // userAccount=(TextView)findViewById(R.id.user_account);
+        if(user!=null)
+        {
+            USER_NAME=user;
+            SharedPreferences.Editor editor=getSharedPreferences(USER_URL,MODE_PRIVATE).edit();
+            editor.putString("name",user);
+            editor.putBoolean("isTemp",false);
+            editor.apply();
+            User.setNowUserName(user);
+            User.setUserIsTemp(false);
+          //  userAccount.setText(user);
+        }
+        //如果是自己启动的，则读取信息给user中的信息进行赋值
+        //之后所有操作都是围绕不同用户展开的
+        else
+        {
+         SharedPreferences preferences=getSharedPreferences(USER_URL,MODE_PRIVATE);
+         String name=preferences.getString("name",USER_NAME);
+         boolean isTemp=preferences.getBoolean("isTemp",true);
+         User.setNowUserName(name);
+         User.setUserIsTemp(isTemp);
+         //userAccount.setText(name);
+        }
+        ActivityCollector.addActivity(this);
         Connector.getDatabase();//数据库初始化
         if(DataSupport.find(Account.class,1)==null)
         {
@@ -139,6 +180,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         final NavigationView navigationView=(NavigationView)findViewById(R.id.drawer_view);
+        View drawerHeadView=navigationView.inflateHeaderView(R.layout.drawer_layout_head);
+        userPicture=drawerHeadView.findViewById(R.id.user_picture);
+        userPicture.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+               Intent intentUserInfo=new Intent(MainActivity.this, ActivityUserInfor.class);
+               startActivity(intentUserInfo);
+            }
+        });
+
+
         //navigationView.setCheckedItem(R.id.push_data);
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -146,25 +199,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                    switch(item.getItemId())
                    {
                        case R.id.push_data:
-                          /* drawerLayout.closeDrawers();
-                           PopupMenu popup = new PopupMenu(MainActivity.this,navigationView);
-                           //Inflating the Popup using xml file
-                           popup.getMenuInflater()
-                                   .inflate(R.menu.select_how_to_export_data, popup.getMenu());
-
-                           //registering popup with OnMenuItemClickListener
-                           popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                               public boolean onMenuItemClick(MenuItem item) {
-
-                                   return true;
-                               }
-                           });
-
-                           popup.show(); //showing*/
                           Intent selectExportData=new Intent(MainActivity.this, ActivityExportData.class);
                           startActivity(selectExportData);
                            break;
-
+                       case R.id.login:
+                           Intent loginIntent=new Intent(MainActivity.this, ActivityLogin.class);
+                           startActivity(loginIntent);
+                           break;
+                       case R.id.load_data:
+                           Intent loadIntent=new Intent(MainActivity.this, ActivityloadFile.class);
+                           startActivity(loadIntent);
+                           break;
                    }
                    return true;
             }
@@ -318,5 +363,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
+}
 

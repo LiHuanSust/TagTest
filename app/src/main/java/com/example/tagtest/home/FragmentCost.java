@@ -28,6 +28,7 @@ import com.example.tagtest.MyData;
 import com.example.tagtest.R;
 import com.example.tagtest.account.Account;
 import com.example.tagtest.account.AccountInformation;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.GetDate;
 import com.example.tagtest.tools.MyCalculate;
 import com.iflytek.cloud.ErrorCode;
@@ -205,7 +206,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         spinner_cost_type=(Spinner) getActivity().findViewById(R.id.spinner_cost_type);//消费时账户类型选择，Spinner
         bank_card_layout=(LinearLayout)getActivity().findViewById(R.id.bank_card_select);//银行卡选择，Spinner
        // spinner_bank_type=(Spinner)getActivity().findViewById(R.id.spinner_bank_select);
-        mList= DataSupport.findAll(Account.class);
+        mList= DataSupport.where("user=?", User.getNowUserName()).find(Account.class);
         adapterAccountSelect=new AdapterAccountSelect(getActivity(),mList);
         spinner_cost_type.setAdapter(adapterAccountSelect);
         speech=(ImageView)getActivity().findViewById(R.id.speech);
@@ -376,7 +377,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
                     int day = Integer.parseInt(yearMonthDay[2]);
                     //float Money = Float.parseFloat(money);
                     MyData myData = new MyData();
-                    myData.setUser("user");
+                    myData.setUser(mAccount.getUser());
                     myData.setType(true);
                     myData.setTypeSelect(type);
                     myData.setYear(year);

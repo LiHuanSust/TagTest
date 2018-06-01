@@ -1,6 +1,7 @@
 package com.example.tagtest.tables;
 
 import com.example.tagtest.MyData;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.MyCalculate;
 
 import org.litepal.crud.DataSupport;
@@ -24,7 +25,7 @@ public class GetDataByYear {
     List<ShowDataByYearDataBase> dataList=new ArrayList<>();
     public List<ShowDataByYearDataBase> getDataByYear()
     {
-     myDataList= DataSupport.where("year=?",year).find(MyData.class);
+     myDataList= DataSupport.where("user=? and year=?", User.getNowUserName(),year).find(MyData.class);
      if(myDataList.size()==0)
          return null;
      for(int month=1;month<=12;month++)

@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.tagtest.R;
+import com.example.tagtest.tools.ActivityCollector;
 
 /*
 *该活动用来显示账号的详细信息
@@ -33,6 +34,7 @@ public class ShowAccountValue extends AppCompatActivity implements View.OnClickL
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActivityCollector.addActivity(this);
         setContentView(R.layout.activity_show_account_value);
         account=(Account) getIntent().getSerializableExtra("Account");
         accountInformation= account.getAccountInformation();
@@ -109,4 +111,9 @@ public class ShowAccountValue extends AppCompatActivity implements View.OnClickL
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
+    }
 }

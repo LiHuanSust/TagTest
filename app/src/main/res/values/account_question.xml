@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--此处为找回密码设置问题-->
+    <string-array name="question">
+        <item >我的生日是？</item>
+        <item >我最喜欢的人是？</item>
+        <item >我毕业的学校是？</item>
+        <item >我的爱好是？</item>
+    </string-array>
+</resources>

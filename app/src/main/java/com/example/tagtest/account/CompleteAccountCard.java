@@ -18,8 +18,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.tagtest.tools.GetDate;
 import com.example.tagtest.R;
+import com.example.tagtest.drawer.User;
+import com.example.tagtest.tools.ActivityCollector;
+import com.example.tagtest.tools.GetDate;
+
+import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +63,7 @@ public class CompleteAccountCard extends AppCompatActivity implements View.OnCli
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_account_card);
+        ActivityCollector.addActivity(this);
         inilitise();
     }
 
@@ -146,32 +151,40 @@ public class CompleteAccountCard extends AppCompatActivity implements View.OnCli
                 }
                 else
                 {
-                    boolean isAccountInfor,isAccount; //判断添加数据是否成功
-                    AccountInformation accountInformation=new AccountInformation();
-                    accountInformation.setCard(true);
-                    accountInformation.setDateAdd(new GetDate().allToString());
-                    accountInformation.setDate("无");
-                    accountInformation.setNum(0);
-                    accountInformation.setSalary("0");
-                    accountInformation.setCost("0");
-                    accountInformation.setRemarks(remarks.getText().toString());
-                    accountInformation.setMoney(mMoney);
-                    accountInformation.setAccountName(mAccountNumber);
-                    isAccountInfor=accountInformation.save();
-                    Account account=new Account();
-                    account.setUser("L.H");
-                    account.setType(typeName);
-                    account.setAccoutPicId(picId);
-                    account.setAccountName(mAccountNumber);
-                    account.setAccountInformation(accountInformation);
-                    isAccount=account.save();
-                    if(isAccountInfor && isAccount)
+                    Account tempAccount= DataSupport.where("accountName=?",mAccountNumber).findFirst(Account.class);
+                    //当前帐户名已存在
+                    if(tempAccount!=null)
                     {
-                        Toast.makeText(this,"保存成功",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this,"已有同名银行卡账户存在!",Toast.LENGTH_SHORT).show();
                     }
-                    else
-                    {
-                        Toast.makeText(this,"一些问题发生了哦",Toast.LENGTH_SHORT).show();
+                    //当前帐户名不存在
+
+                    else {
+                        boolean isAccountInfor, isAccount; //判断添加数据是否成功
+                        AccountInformation accountInformation = new AccountInformation();
+                        accountInformation.setUser(User.getNowUserName());
+                        accountInformation.setCard(true);
+                        accountInformation.setDateAdd(new GetDate().allToString());
+                        accountInformation.setDate("无");
+                        accountInformation.setNum(0);
+                        accountInformation.setSalary("0");
+                        accountInformation.setCost("0");
+                        accountInformation.setRemarks(remarks.getText().toString());
+                        accountInformation.setMoney(mMoney);
+                        accountInformation.setAccountName(mAccountNumber);
+                        isAccountInfor = accountInformation.save();
+                        Account account = new Account();
+                        account.setUser(User.getNowUserName());
+                        account.setType(typeName);
+                        account.setAccoutPicId(picId);
+                        account.setAccountName(mAccountNumber);
+                        account.setAccountInformation(accountInformation);
+                        isAccount = account.save();
+                        if (isAccountInfor && isAccount) {
+                            Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "一些问题发生了哦", Toast.LENGTH_SHORT).show();
+                        }
                     }
                     break;
                 }
@@ -258,5 +271,11 @@ public class CompleteAccountCard extends AppCompatActivity implements View.OnCli
             return convertView;
 
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }

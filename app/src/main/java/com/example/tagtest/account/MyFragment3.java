@@ -14,10 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.tagtest.R;
-import com.example.tagtest.account.Account;
-import com.example.tagtest.account.AdapterAccount;
-import com.example.tagtest.account.SelectAccount;
-import com.example.tagtest.account.ShowAccountValue;
+import com.example.tagtest.drawer.User;
 
 import org.litepal.crud.DataSupport;
 
@@ -43,7 +40,7 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
         View view=inflater.inflate(R.layout.third_fragment,container,false);
         listView=view.findViewById(R.id.list_view_account);
          //Account mAccount=new Account();
-        mList=DataSupport.findAll(Account.class);
+        mList=DataSupport.where("user=?",User.getNowUserName()).find(Account.class);
         mAdapter=new AdapterAccount(getActivity(),R.layout.list_view_account_basic,mList);
         listView.setAdapter(mAdapter);
         return view;
@@ -63,7 +60,7 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
         Log.d("Fragment3","onResume");
         mList=null;
         mAdapter=null;
-        mList=DataSupport.findAll(Account.class);
+        mList=DataSupport.where("user=?", User.getNowUserName()).find(Account.class);
         mAdapter=new AdapterAccount(getActivity(),R.layout.list_view_account_basic,mList);
         listView.setAdapter(mAdapter);
 

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.tagtest.drawer.ActivityForgetPassWd">
+    <include layout="@layout/toolbar"></include>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="你可以通过回答注册账户时所选的问题重置密码哦"
+        android:textSize="15sp"
+        />
+    <EditText
+        android:layout_marginTop="30dp"
+        android:id="@+id/account_find_passwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入你的账号，账号长度不能小于7哦~"/>
+    <Button
+        android:layout_marginTop="20dp"
+        android:id="@+id/button_find_passwd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="获取问题"
+        android:clickable="false"
+        />
+</LinearLayout>

@@ -69,7 +69,12 @@
         <activity android:name=".tables.ActivityShowDataByMonth" />
         <activity android:name=".tables.ActivityShowDataByAccount" />
         <activity android:name=".tables.ActivityShowDataByYear" />
-        <activity android:name=".drawer.ActivityExportData"></activity>
+        <activity android:name=".drawer.ActivityExportData" />
+        <activity android:name=".drawer.ActivityLogin" />
+        <activity android:name=".drawer.ActivityRegister" />
+        <activity android:name=".drawer.ActivityloadFile" />
+        <activity android:name=".drawer.ActivityForgetPassWd" />
+        <activity android:name=".drawer.ActivityUserInfor"></activity>
     </application>
 
 </manifest>

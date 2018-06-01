@@ -8,4 +8,17 @@
     <string name="salary_month">本月收入:</string>
     <string name="cost_year">年支出:</string>
     <string name="salary_year">年收入:</string>
+    <!--账户登录模块-->
+    <string name="account_text">请输入你的账户</string>
+    <string name="password_text">请输入你的密码</string>
+    <string name="login_text">登录</string>
+    <string name="register_text">注册</string>
+    <string name="login_account_name">帐户名:</string>
+    <string name="account_password">账户密码:</string>
+    <string name="account_passwd_repeat">确认密码:</string>
+    <string name="account_work">工作:</string>
+    <string name="account_sex">性别：</string>'
+    <string name="account_question">密保问题：</string>
+    <string name="question_answer">密保答案：</string>
+    <string name="register">注册</string>
 </resources>

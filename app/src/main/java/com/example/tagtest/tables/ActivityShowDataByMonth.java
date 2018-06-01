@@ -11,6 +11,7 @@ import com.bigkoo.pickerview.builder.TimePickerBuilder;
 import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.tagtest.R;
+import com.example.tagtest.tools.ActivityCollector;
 import com.example.tagtest.tools.GetDate;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.data.Entry;
@@ -34,6 +35,7 @@ public class ActivityShowDataByMonth extends AppCompatActivity implements OnChar
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_data_by_month);
+        ActivityCollector.addActivity(this);
         initialise();
         GetDate date=new GetDate();
         GetDataSomeMonth dataSomeMonth=new GetDataSomeMonth(date.getYear()+"",date.getMonth()+"");
@@ -119,6 +121,12 @@ public class ActivityShowDataByMonth extends AppCompatActivity implements OnChar
     @Override
     public void onNothingSelected() {
         Log.i("Nothing selected", "Nothing selected.");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }
 

@@ -15,6 +15,8 @@ import android.widget.ListView;
 import com.example.tagtest.DataAdapter;
 import com.example.tagtest.MyData;
 import com.example.tagtest.R;
+import com.example.tagtest.drawer.User;
+import com.example.tagtest.tools.ActivityCollector;
 
 import org.litepal.crud.DataSupport;
 
@@ -38,13 +40,14 @@ public class ActivitySearch extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        ActivityCollector.addActivity(this);
         initialise();
 
     }
     public void initialise()
     {
 
-       toolbar=(Toolbar)findViewById(R.id.tool_bar);
+       toolbar= findViewById(R.id.tool_bar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -58,7 +61,7 @@ public class ActivitySearch extends AppCompatActivity {
         });
         listView=findViewById(R.id.list_view_search);
         listView.setEmptyView(findViewById(R.id.layout_empty));
-        list= DataSupport.findAll(MyData.class);
+        list= DataSupport.where("user=?", User.getNowUserName()).find(MyData.class);
         listSelect=new HashSet<>();
 
     }
@@ -112,6 +115,11 @@ public class ActivitySearch extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
+}
 
 

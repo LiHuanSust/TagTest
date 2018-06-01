@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.tagtest.MyData;
 import com.example.tagtest.R;
 import com.example.tagtest.account.Account;
+import com.example.tagtest.tools.ActivityCollector;
 
 import org.litepal.crud.DataSupport;
 
@@ -46,6 +47,7 @@ public class ActivityExportData extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_export_data);
+        ActivityCollector.addActivity(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolBarText = (TextView) findViewById(R.id.toolbar_text_view);
         listView = (ListView) findViewById(R.id.list_view_export_select);
@@ -106,9 +108,9 @@ public class ActivityExportData extends AppCompatActivity {
                  out=new FileOutputStream(file);
                  String title="                  消费收入详情\n";
                  int len=0;
-                 List<MyData> list= DataSupport.findAll(MyData.class);
+                 List<MyData> list= DataSupport.where("user=?",User.getNowUserName()).find(MyData.class);
                  Map<Long,String>  accountName=new HashMap<>();
-                 List<Account> accounts=DataSupport.findAll(Account.class);
+                 List<Account> accounts=DataSupport.where("user=?",User.getNowUserName()).find(Account.class);
                  for(Account account:accounts)
                  {
                     accountName.put(account.getId(),account.getAccountName());
@@ -216,11 +218,11 @@ public class ActivityExportData extends AppCompatActivity {
     //设置每个单元格数据
     public void setValueIntoCell(WritableSheet writableSheet)
     {
-       List<MyData> dataList=DataSupport.findAll(MyData.class);
+       List<MyData> dataList=DataSupport.where("user=?",User.getNowUserName()).find(MyData.class);
        if(dataList.size()==0)
            return;
         Map<Long,String>  accountName=new HashMap<>();
-        List<Account> accounts=DataSupport.findAll(Account.class);
+        List<Account> accounts=DataSupport.where("user=?",User.getNowUserName()).find(Account.class);
         for(Account account:accounts)
         {
             accountName.put(account.getId(),account.getAccountName());
@@ -275,5 +277,11 @@ public class ActivityExportData extends AppCompatActivity {
                 .build();
         manager.notify(code, notification);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }

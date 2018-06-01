@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.tagtest.R;
+import com.example.tagtest.tools.ActivityCollector;
 
 import java.util.ArrayList;
 
@@ -38,6 +39,7 @@ public class ActivityAdd extends AppCompatActivity{
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add);
+        ActivityCollector.addActivity(this);
         costAdd=findViewById(R.id.cost_add);
         salaryAdd=findViewById(R.id.salary_add);
         toolbar=(Toolbar)findViewById(R.id.toolbar);
@@ -107,5 +109,11 @@ public class ActivityAdd extends AppCompatActivity{
 
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ActivityCollector.removeActivity(this);
     }
 }

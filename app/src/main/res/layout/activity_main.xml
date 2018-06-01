@@ -109,6 +109,5 @@
         android:layout_height="match_parent"
         android:layout_gravity="left"
         app:menu="@menu/drawer_layout_menu"
-        app:headerLayout="@layout/drawer_layout_head"
         />
 </android.support.v4.widget.DrawerLayout>

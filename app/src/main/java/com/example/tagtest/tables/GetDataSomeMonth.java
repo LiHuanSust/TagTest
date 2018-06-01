@@ -3,6 +3,7 @@ package com.example.tagtest.tables;
 import android.util.Log;
 
 import com.example.tagtest.MyData;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.MyCalculate;
 
 import org.litepal.crud.DataSupport;
@@ -38,7 +39,7 @@ public class GetDataSomeMonth
           //要先初始化
           dataList.add("0.0");
         }
-        List<MyData> list= DataSupport.where("year=? and month=? and type=?",year,month,"1").find(MyData.class);
+        List<MyData> list= DataSupport.where("user=? and year=? and month=? and type=?", User.getNowUserName(),year,month,"1").find(MyData.class);
             for(MyData temp:list)
             {
                 int pos=temp.getDay()-1;
@@ -58,7 +59,7 @@ public class GetDataSomeMonth
             //要先初始化
             dataList.add("0.0");
         }
-        List<MyData> list= DataSupport.where("year=? and month=? and type=?",year,month,"0").find(MyData.class);
+        List<MyData> list= DataSupport.where("user=? and year=? and month=? and type=?",User.getNowUserName(),year,month,"0").find(MyData.class);
         for(MyData temp:list)
         {
             int pos=temp.getDay()-1;

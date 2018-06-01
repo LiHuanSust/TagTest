@@ -26,6 +26,7 @@ import com.bigkoo.pickerview.listener.OnTimeSelectListener;
 import com.bigkoo.pickerview.view.TimePickerView;
 import com.example.tagtest.MyData;
 import com.example.tagtest.R;
+import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.GetDate;
 
 import org.litepal.crud.DataSupport;
@@ -66,7 +67,7 @@ public class MyFrgment2 extends Fragment{
         setHasOptionsMenu(true);
         data_show_list=view.findViewById(R.id.list_view);
         dateNow=new GetDate();
-        list=DataSupport.where("year=? and month=?",dateNow.getYear()+"",dateNow.getMonth()+""
+        list=DataSupport.where("user=? and year=? and month=?", User.getNowUserName(),dateNow.getYear()+"",dateNow.getMonth()+""
                 ).find(MyData.class);
         mAdapter=new MyAdapter();
         data_show_list.setAdapter(mAdapter);
@@ -84,7 +85,7 @@ public class MyFrgment2 extends Fragment{
     public void onResume() //重新可见时刷新listView中的数据
     {
         super.onResume();
-        list=DataSupport.where("year=? and month=?",dateNow.getYear()+"",dateNow.getMonth()+""
+        list=DataSupport.where("user=? and year=? and month=?",User.getNowUserName(),dateNow.getYear()+"",dateNow.getMonth()+""
         ).find(MyData.class);
         mAdapter.notifyDataSetChanged();
 
@@ -243,7 +244,7 @@ public class MyFrgment2 extends Fragment{
                 else
                     month+=1;
                 Log.d("HelloWorld",year+","+month);
-                list=DataSupport.where("year=? and month=?",year+"",month+"").find(MyData.class);
+                list=DataSupport.where("user=? and year=? and month=?",User.getNowUserName(),year+"",month+"").find(MyData.class);
                 String temp=year+","+month;
                 dateOfMonth.setText(temp);
                 mAdapter.notifyDataSetChanged();

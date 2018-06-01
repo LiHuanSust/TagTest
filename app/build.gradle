@@ -44,4 +44,5 @@ dependencies {
     implementation files('libs/Sunflower.jar')
     implementation 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     implementation files('libs/jxl-2.6.12.jar')
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
 }

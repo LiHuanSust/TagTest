@@ -99,4 +99,34 @@ public class UseJson {
         return answer;
     }
 
+    public static Answer getDownLoadFileIsExit(final String json) {
+        Answer answer=null;
+        try {
+
+            JSONObject jsonObject = new JSONObject(json);
+            int resultCode =jsonObject.getInt("DownloadFileCheck");
+            answer=new Answer();
+            Log.d("UseJson", resultCode+"");
+            if(resultCode==CodeValue.FILE_NOT_EXITS)
+            {
+                answer.setResult(false);
+                answer.setText("文件不存在");
+            }
+            else
+                if(resultCode==CodeValue.SUCCESSFUL)
+            {
+                answer.setResult(true);
+                answer.setText("云端文件已备份");
+            }
+            else
+                {
+                    answer.setResult(false);
+                    answer.setText("服务器找不到相应页面");
+                }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return answer;
+    }
+
 }

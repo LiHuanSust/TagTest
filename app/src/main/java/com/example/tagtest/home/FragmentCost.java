@@ -1,7 +1,10 @@
 package com.example.tagtest.home;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -28,6 +31,7 @@ import com.example.tagtest.MyData;
 import com.example.tagtest.R;
 import com.example.tagtest.account.Account;
 import com.example.tagtest.account.AccountInformation;
+import com.example.tagtest.account.SelectAccount;
 import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.GetDate;
 import com.example.tagtest.tools.MyCalculate;
@@ -60,6 +64,7 @@ import java.util.List;
 public class FragmentCost extends Fragment implements View.OnClickListener{
     private TextView costType=null;
     private TextView dateNow=null;
+    private TextView typeOther=null;
     private EditText costMoney=null;
     private EditText costRemarks=null;
     protected LinearLayout bank_card_layout;
@@ -77,13 +82,13 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
     private Button button_12;
     private Button saveButton; //保存按钮
     private Button clearButton;//清空按钮
-    protected Spinner spinner_cost_type; //消费类型下拉框
-    protected Spinner spinner_bank_type; //银行下拉框
+    protected Spinner spinnerAccountType; //消费账户
     private ArrayList<Button> list_button=null;
     private boolean flag=false;  //判断收入还是支出
     private GetDate myDate;
-    private AdapterAccountSelect adapterAccountSelect;
+    private AdapterSpinner adapterSpinner;
     private List<Account> mList;  //spinner的list数据
+    private List<TypeInfor> mTypeInforList;  //所有类型的数据
     private Account mAccount;//相应的账户
     private UseXunFei useXunFei; //调用讯飞
     private ImageView speech;
@@ -102,6 +107,12 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
          useXunFei=new UseXunFei(getActivity());
         useXunFei.inilite();
         initialise();
+        mTypeInforList=DataSupport.findAll(TypeInfor.class);
+        if(mTypeInforList.size()==0)
+        {
+            //第一次启动，加载数据
+            initialiseValue();
+        }
         costTypeSelect();
     }
   /*  public void getPermission()
@@ -185,6 +196,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         myDate=new GetDate();
         dateNow=getActivity().findViewById(R.id.time_now);
         dateNow.setOnClickListener(this);
+        typeOther=getActivity().findViewById(R.id.type_select_all);
         list_button=new ArrayList<>();
         button_1=getActivity().findViewById(R.id.button1);
         button_2=getActivity().findViewById(R.id.button2);
@@ -203,12 +215,29 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         costType=getActivity().findViewById(R.id.cost_type); //消费类型显示,TextView
         costRemarks=getActivity().findViewById(R.id.cost_remarks); //备注，EditText
         costMoney=getActivity().findViewById(R.id.cost_money); //消费金额，TextView
-        spinner_cost_type=(Spinner) getActivity().findViewById(R.id.spinner_cost_type);//消费时账户类型选择，Spinner
+        spinnerAccountType=(Spinner) getActivity().findViewById(R.id.spinner_cost_type);//消费时账户类型选择，Spinner
         bank_card_layout=(LinearLayout)getActivity().findViewById(R.id.bank_card_select);//银行卡选择，Spinner
        // spinner_bank_type=(Spinner)getActivity().findViewById(R.id.spinner_bank_select);
         mList= DataSupport.where("user=?", User.getNowUserName()).find(Account.class);
-        adapterAccountSelect=new AdapterAccountSelect(getActivity(),mList);
-        spinner_cost_type.setAdapter(adapterAccountSelect);
+        //如果没有添加过账户
+        if(mList.size()==0)
+        {
+            AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
+            dialog.setTitle("通知：");
+            dialog.setMessage("您还没有添加过任何账户信息哦，这样将无法使用相关功能的！！！");
+            dialog.setCancelable(false);
+            dialog.setPositiveButton("立即添加", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent addAccount=new Intent(getActivity(), SelectAccount.class);
+                    startActivity(addAccount);
+                }
+            });
+            dialog.show();
+
+        }
+        adapterSpinner=new AdapterSpinner(getActivity(),mList);
+        spinnerAccountType.setAdapter(adapterSpinner);
         speech=(ImageView)getActivity().findViewById(R.id.speech);
         speech.setOnClickListener(this);
         list_button.add(button_1);
@@ -229,13 +258,14 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         {
             button.setOnClickListener(this);
         }
+        typeOther.setOnClickListener(this);
         button_1.setSelected(true);
         costType.setText(button_1.getText().toString());
         dateNow.setText(myDate.allToString());
     }
     public void costTypeSelect()
     {
-        spinner_cost_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        spinnerAccountType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -249,24 +279,99 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
             }
         });
     }
-    public void bankCardSelected()   //银行卡选择
+    //类型数据的初始化
+    public void initialiseValue()
     {
-        bank_card_layout=(LinearLayout)getActivity().findViewById(R.id.bank_card_select);
-        bank_card_layout.setVisibility(View.VISIBLE);
-        spinner_bank_type=(Spinner)getActivity().findViewById(R.id.spinner_bank_select);
-        spinner_bank_type.setSelection(0);
-       // bank_select_value=spinner_bank_type.getItemAtPosition(0).toString();
-       // spinner_bank_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-         /*   @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                bank_select_value=adapterView.getItemAtPosition(i).toString();
-            }
+        //1,餐饮
+        //2，交通
+        //3，购物
+        //4，娱乐
+        //5，医疗
+        //6，教育
+        //7，其他
+        //餐饮
+        String[] eatValue={"早餐","午餐","晚餐","零食","饮品","水果"};
+        //交通
+        String[] traffic={"公交","打车","加油","停车费","地铁","火车","长途汽车","飞机"};
+        //购物
+        String[] shopping={"服饰鞋包","家居百货","烟酒","电子产品","报刊书籍","化妆品","家用电器"};
+        //娱乐
+        String[] play={"电影","游戏"};
+        //医药
+        String[] medicine={"医药","挂号门诊"};
+        //教育
+        String[] education={"学费","补习"};
+        //其他
+        String[] other={"礼金","红包"};
+        ArrayList<TypeInfor> typeInfors=new ArrayList<>();
+        int count=0;
+        for(int i=0;i<eatValue.length;i++)
+        {
+            TypeInfor type=new TypeInfor();
+            type.setName(eatValue[i]);
+            type.setCost(true);
+            type.setTypeId(0);
+            type.setSave(false);
+            typeInfors.add(type);
+        }
+        for(int j=0;j<traffic.length;j++)
+        {
+            TypeInfor type=new TypeInfor();
+            type.setName(traffic[j]);
+            type.setCost(true);
+            type.setTypeId(1);
+            type.setSave(false);
+            typeInfors.add(type);
+        }
+        for(int n=0;n<shopping.length;n++)
+        {
+            TypeInfor type=new TypeInfor();
+            type.setName(shopping[n]);
+            type.setCost(true);
+            type.setTypeId(2);
+            type.setSave(false);
+            typeInfors.add(type);
+        }
+        for(int k=0;k<play.length;k++)
+        {
+            TypeInfor type=new TypeInfor();
+            type.setName(play[k]);
+            type.setCost(true);
+            type.setTypeId(3);
+            type.setSave(false);
+            typeInfors.add(type);
+        }
+        for(int m=0;m<medicine.length;m++)
+        {
+            TypeInfor type=new TypeInfor();
+            type.setName(medicine[m]);
+            type.setCost(true);
+            type.setTypeId(4);
+            type.setSave(false);
+            typeInfors.add(type);
+        }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+        for(int p=0;p<education.length;p++)
+        {
+            TypeInfor type=new TypeInfor();
+            type.setName(education[p]);
+            type.setCost(true);
+            type.setTypeId(5);
+            type.setSave(false);
+            typeInfors.add(type);
+        }
 
-            }
-        });*/
+        for(int q=0;q<other.length;q++)
+        {
+            TypeInfor type=new TypeInfor();
+            type.setName(other[q]);
+            type.setCost(true);
+            type.setTypeId(6);
+            type.setSave(false);
+            typeInfors.add(type);
+
+        }
+        DataSupport.saveAll(typeInfors);
 
     }
     public void clearValue() //清空所有内容
@@ -276,7 +381,7 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         button_1.setSelected(true);
         costMoney.setText("");
         costRemarks.setText("");
-        spinner_cost_type.setSelection(0);
+        spinnerAccountType.setSelection(0);
 //        bank_card_layout.setVisibility(View.GONE);
 
     }
@@ -361,66 +466,76 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
             case R.id.speech:
                 useXunFei.show();
                 break;
+                //点击了选择其他类别
+            case R.id.type_select_all:
+                Intent intentSelectAll=new Intent(getActivity(),ActivityCostTypeManage.class);
+                startActivity(intentSelectAll);
+                break;
             case R.id.cost_add_cancel:
                 clearValue();
                 break;
             case R.id.cost_add_save:
-                String date = dateNow.getText().toString();
-                String money = costMoney.getText().toString();
-                String type = costType.getText().toString();
-                String remarks = costRemarks.getText().toString();
-                if (!TextUtils.isEmpty(money) && !TextUtils.isEmpty(type)) {
-                    String[] dateInformation = date.split(" "); //把年月日与时分秒分开
-                    String[] yearMonthDay = dateInformation[0].split("-");//将年月日分开
-                    int year = Integer.parseInt(yearMonthDay[0]);
-                    int month = Integer.parseInt(yearMonthDay[1]);
-                    int day = Integer.parseInt(yearMonthDay[2]);
-                    //float Money = Float.parseFloat(money);
-                    MyData myData = new MyData();
-                    myData.setUser(mAccount.getUser());
-                    myData.setType(true);
-                    myData.setTypeSelect(type);
-                    myData.setYear(year);
-                    myData.setMonth(month);
-                    myData.setDay(day);
-                    myData.setHourMinuteSecond(dateInformation[1]);
-                    myData.setAccount(mAccount);
-                    myData.setAccountId(mAccount.getId());
-                    myData.setRemarks(remarks);
-                    Log.d("Hello",type);
-                    myData.setMoney(money);
-                    if (myData.save()) {
-                        mAccount.getList().add(myData);
-                        AccountInformation accountInformation = DataSupport.find(AccountInformation.class, mAccount.getId());
-                        Log.d("Right", accountInformation.toString());
-                        String accountCost = MyCalculate.add(accountInformation.getCost(),money);
-                        String accountMoney = MyCalculate.sub(accountInformation.getMoney(),money);
-                        int accountNum = accountInformation.getNum() + 1;
-                        accountInformation.setCost(accountCost);
-                        accountInformation.setMoney(accountMoney);
-                        accountInformation.setDateAdd(date);
-                        accountInformation.setNum(accountNum);
-                        if (accountInformation.save()) {
-                            Log.d("Right", accountInformation.getId()+"");
-                            Toast.makeText(getActivity(), "保存成功！", Toast.LENGTH_SHORT).show();
-                            clearValue();
-                        }
-                        else
-                            Toast.makeText(getActivity(), "关联表更新失败！", Toast.LENGTH_SHORT).show();
+                if (mList != null && mList.size() != 0) {
+                    String date = dateNow.getText().toString();
+                    String money = costMoney.getText().toString();
+                    String type = costType.getText().toString();
+                    String remarks = costRemarks.getText().toString();
+                    if (!TextUtils.isEmpty(money) && !TextUtils.isEmpty(type)) {
+                        String[] dateInformation = date.split(" "); //把年月日与时分秒分开
+                        String[] yearMonthDay = dateInformation[0].split("-");//将年月日分开
+                        int year = Integer.parseInt(yearMonthDay[0]);
+                        int month = Integer.parseInt(yearMonthDay[1]);
+                        int day = Integer.parseInt(yearMonthDay[2]);
+                        //float Money = Float.parseFloat(money);
+                        MyData myData = new MyData();
+                        myData.setUser(mAccount.getUser());
+                        myData.setType(true);
+                        myData.setTypeSelect(type);
+                        myData.setYear(year);
+                        myData.setMonth(month);
+                        myData.setDay(day);
+                        myData.setHourMinuteSecond(dateInformation[1]);
+                        myData.setAccount(mAccount);
+                        myData.setAccountId(mAccount.getId());
+                        myData.setRemarks(remarks);
+                        myData.setAccountName(mAccount.getAccountName());
+                        Log.d("Hello", type);
+                        myData.setMoney(money);
+                        if (myData.save()) {
+                            mAccount.getList().add(myData);
+                            AccountInformation accountInformation = DataSupport.find(AccountInformation.class, mAccount.getId());
+                            Log.d("Right", accountInformation.toString());
+                            String accountCost = MyCalculate.add(accountInformation.getCost(), money);
+                            String accountMoney = MyCalculate.sub(accountInformation.getMoney(), money);
+                            int accountNum = accountInformation.getNum() + 1;
+                            accountInformation.setCost(accountCost);
+                            accountInformation.setMoney(accountMoney);
+                            accountInformation.setDateAdd(date);
+                            accountInformation.setNum(accountNum);
+                            if (accountInformation.save()) {
+                                Log.d("Right", accountInformation.getId() + "");
+                                Toast.makeText(getActivity(), "保存成功！", Toast.LENGTH_SHORT).show();
+                                clearValue();
+                            } else
+                                Toast.makeText(getActivity(), "关联表更新失败！", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(getActivity(), "数据保存失败", Toast.LENGTH_SHORT).show();
+                        break;
+                    } else {
+                        Toast.makeText(getActivity(), "请将数据填写完整", Toast.LENGTH_SHORT).show();
+                        break;
                     }
-                    else
-                        Toast.makeText(getActivity(),"数据保存失败",Toast.LENGTH_SHORT).show();
-                    break;
                 }
                 else
                 {
-                    Toast.makeText(getActivity(),"请将数据填写完整",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "您还没有添加任何账户信息！！！", Toast.LENGTH_SHORT).show();
                     break;
                 }
-                default:
-                    break;
+                    default:
+                        break;
+                }
         }
-    }
+
     public void setNotSelected() //使按钮不被选择
     {
         if(list_button!=null) {
@@ -673,6 +788,18 @@ public class FragmentCost extends Fragment implements View.OnClickListener{
         }
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d("FragmentCost","cost被调用了");
+        mList= DataSupport.where("user=?", User.getNowUserName()).find(Account.class);
+        adapterSpinner=new AdapterSpinner(getActivity(),mList);
+        spinnerAccountType.setAdapter(adapterSpinner);
+
+
+    }
+
     @Override
     //fragment 与activity解除联系的时候调用
     public void onDetach() {

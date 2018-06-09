@@ -40,7 +40,8 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
     private String returnData="";
     private String user;
     private String passWd;
-    private static final String LoginAddress="http://10.0.2.2:8080/TagTest/LoginServlet";
+   // private static final String LoginAddress="http://10.0.2.2:8080/TagTest/LoginServlet";
+    private static final String LoginAddress="http://192.168.43.235:8080/TagTest/LoginServlet";
     private ProgressDialog progressDialog=null;
     private Handler handler=new Handler()
     {

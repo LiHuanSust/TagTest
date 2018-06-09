@@ -74,7 +74,8 @@
         <activity android:name=".drawer.ActivityRegister" />
         <activity android:name=".drawer.ActivityloadFile" />
         <activity android:name=".drawer.ActivityForgetPassWd" />
-        <activity android:name=".drawer.ActivityUserInfor"></activity>
+        <activity android:name=".drawer.ActivityUserInfor" />
+        <activity android:name=".home.ActivityCostTypeManage"></activity>
     </application>
 
 </manifest>

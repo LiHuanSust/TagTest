@@ -22,6 +22,7 @@ public class Account extends DataSupport implements Serializable{
     private AccountInformation accountInformation;  //一对一关系，一个账户对应一个账户信息
     private List<MyData> list=new ArrayList<>(); //多对一关系，一个账号对应多条消费记录
 
+
     public long getId() {
         return id;
     }
@@ -64,13 +65,12 @@ public class Account extends DataSupport implements Serializable{
 
     public AccountInformation getAccountInformation() {
 
-        return DataSupport.where("account_id=?",getId()+"").findFirst(AccountInformation.class);
+        return DataSupport.where("id=?",getId()+"").findFirst(AccountInformation.class);
     }
 
     public void setAccountInformation(AccountInformation accountInformation) {
         this.accountInformation = accountInformation;
     }
-
     public List<MyData> getList() {
         return list;
     }

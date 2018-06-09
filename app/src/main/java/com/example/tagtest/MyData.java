@@ -24,6 +24,8 @@ public class MyData extends DataSupport implements Serializable{
     private long id; //加id是为了方便进行查找，删除，注意：此处即使加了id，并重新加了值，进入数据库中还是会变主键id的值
     private long accountId;  //加入accountId;
     private Account account;//消费明细和使用的账号一对一
+    private String accountName; //相应的accountName
+    private int picId;//数据库存的图片id。
     public MyData()
     {}
     public MyData(String user,boolean type,String typeSelect,int year,int month,int day,String hourMinuteSecond,String money,String remarks) //此接口是数据库存储调用
@@ -133,6 +135,22 @@ public class MyData extends DataSupport implements Serializable{
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public String getAccountName() {
+        return accountName;
+    }
+
+    public void setAccountName(String accountName) {
+        this.accountName = accountName;
+    }
+
+    public int getPicId() {
+        return picId;
+    }
+
+    public void setPicId(int picId) {
+        this.picId = picId;
     }
 
     public String dateToString()

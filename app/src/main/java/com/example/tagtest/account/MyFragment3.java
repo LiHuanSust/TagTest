@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.tagtest.R;
 import com.example.tagtest.drawer.User;
+import com.example.tagtest.tools.MyCalculate;
 
 import org.litepal.crud.DataSupport;
 
@@ -27,7 +28,7 @@ import java.util.List;
 public class MyFragment3 extends Fragment implements View.OnClickListener,AdapterView.OnItemClickListener,AdapterView.OnItemLongClickListener{
     private ListView listView;
     private TextView cost; //花费
-    private TextView budget; //预算
+    private TextView salary; //收入
     private TextView total; //统计（净资产）
     private TextView addAccount;
     private List<Account> mList;
@@ -40,6 +41,7 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
         View view=inflater.inflate(R.layout.third_fragment,container,false);
         listView=view.findViewById(R.id.list_view_account);
          //Account mAccount=new Account();
+
         mList=DataSupport.where("user=?",User.getNowUserName()).find(Account.class);
         mAdapter=new AdapterAccount(getActivity(),R.layout.list_view_account_basic,mList);
         listView.setAdapter(mAdapter);
@@ -51,6 +53,7 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
         super.onActivityCreated(savedInstanceState);
         initialise();
         setListener();
+        refreshTextViewValue();
 
     }
     @Override
@@ -67,10 +70,10 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
     }
     public void initialise()
     {
-        cost=getActivity().findViewById(R.id.cost_number);
-        budget=getActivity().findViewById(R.id.budget);
-        total=getActivity().findViewById(R.id.total);
         addAccount=getActivity().findViewById(R.id.add_account);
+        cost=(TextView)getActivity().findViewById(R.id.account_cost);
+        salary=(TextView)getActivity().findViewById(R.id.account_salary);
+        total=(TextView)getActivity().findViewById(R.id.account_total);
     }
     public void setListener()
     {
@@ -131,5 +134,25 @@ public class MyFragment3 extends Fragment implements View.OnClickListener,Adapte
         dialog.show();
         //return true ,不会触发点击事件
         return true;
+    }
+
+    public void refreshTextViewValue() {
+        String costTemp = "0.0";
+        String salaryTemp = "0.0";
+        if (mList == null || mList.size() == 0) {
+            cost.setText(costTemp);
+            salary.setText(salaryTemp);
+            total.setText("0.0");
+            return;
+        }
+        for (Account account : mList) {
+            //当为消费数据时
+            AccountInformation accountInformation=account.getAccountInformation();
+                costTemp = MyCalculate.add(costTemp, accountInformation.getCost());
+                salaryTemp = MyCalculate.add(salaryTemp, accountInformation.getSalary());
+        }
+        cost.setText(costTemp);
+        salary.setText(salaryTemp);
+        total.setText(MyCalculate.sub(salaryTemp,costTemp));
     }
 }

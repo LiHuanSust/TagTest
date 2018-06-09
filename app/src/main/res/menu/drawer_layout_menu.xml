@@ -23,13 +23,6 @@
         android:icon="@drawable/dinner"
         android:title="@string/push_data"
         />
-    <item
-        android:id="@+id/setting"
-        android:icon="@drawable/dinner"
-        android:title="@string/setting"
-        >
-
-    </item>
 </group>
 
 </menu>

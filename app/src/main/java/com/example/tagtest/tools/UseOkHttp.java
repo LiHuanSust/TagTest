@@ -90,6 +90,23 @@ public class UseOkHttp {
         okHttpClient.newCall(request).enqueue(callback);
 
     }
+    //判断用户是否在服务器端保存有文件
+    public static void saveFileIsExits(final String address,final String user,okhttp3.Callback callback)
+    {
+        OkHttpClient okHttpClient=new OkHttpClient();
+        RequestBody requestBody=new FormBody.Builder().add("userName",user).build();
+        okhttp3.Request request=new Request.Builder().url(address).post(requestBody).build();
+        okHttpClient.newCall(request).enqueue(callback);
+    }
+    //服务器端进行文件的下载
+    public static void downLoadFile(final String address,final String user,okhttp3.Callback callback)
+    {
+        //get方法访问
+        OkHttpClient okHttpClient=new OkHttpClient();
+        Request request=new Request.Builder().url(address).addHeader("userName",user)
+                .build();
+        okHttpClient.newCall(request).enqueue(callback);
+    }
     public static boolean accountIsExits(final String address,final String account)
     {
         boolean flag=false;

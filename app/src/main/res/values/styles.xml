@@ -9,6 +9,7 @@
     </style>
     <style name="AppCompatTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">#2196F3</item>
+        <item name="android:fitsSystemWindows">true</item>
 
     </style>
 </resources>

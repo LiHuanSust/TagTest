@@ -28,6 +28,7 @@ import com.example.tagtest.MyData;
 import com.example.tagtest.R;
 import com.example.tagtest.drawer.User;
 import com.example.tagtest.tools.GetDate;
+import com.example.tagtest.tools.MyCalculate;
 
 import org.litepal.crud.DataSupport;
 
@@ -40,11 +41,12 @@ import java.util.List;
  * Created by MyFirstPC on 2018/4/13.
  */
 
-public class MyFrgment2 extends Fragment{
+public class MyFragment2 extends Fragment{
     private ListView data_show_list;
     private SwipeRefreshLayout swipeRefreshLayout;
     private TextView salaryOfMonth;
     private TextView costOfMonth;
+    private TextView money; //结余
     private TextView dateOfMonth;
     private GetDate dateNow;
     private TextView listViewEmpty; //当listView为空时显示它
@@ -69,6 +71,24 @@ public class MyFrgment2 extends Fragment{
         dateNow=new GetDate();
         list=DataSupport.where("user=? and year=? and month=?", User.getNowUserName(),dateNow.getYear()+"",dateNow.getMonth()+""
                 ).find(MyData.class);
+        String cost="0.0";
+        String salary="0.0";
+        costOfMonth=(TextView)view.findViewById(R.id.cost_of_month);
+        salaryOfMonth=(TextView)view.findViewById(R.id.salary_of_month);
+        money=(TextView)view.findViewById(R.id.month_rest);
+        for(MyData myData:list)
+        {
+            //当为消费数据时
+            if(myData.getType())
+                cost= MyCalculate.add(cost,myData.getMoney());
+            else
+                salary=MyCalculate.add(salary,myData.getMoney());
+
+        }
+        costOfMonth.setText(cost);
+        salaryOfMonth.setText(salary);
+        money.setText(MyCalculate.sub(salary,cost));
+
         mAdapter=new MyAdapter();
         data_show_list.setAdapter(mAdapter);
         return view;
@@ -87,6 +107,7 @@ public class MyFrgment2 extends Fragment{
         super.onResume();
         list=DataSupport.where("user=? and year=? and month=?",User.getNowUserName(),dateNow.getYear()+"",dateNow.getMonth()+""
         ).find(MyData.class);
+        refreshTextViewValue();
         mAdapter.notifyDataSetChanged();
 
     }
@@ -97,6 +118,7 @@ public class MyFrgment2 extends Fragment{
         swipeRefreshLayout=(SwipeRefreshLayout)getActivity().findViewById(R.id.swipe_refresh);
         costOfMonth=(TextView)getActivity().findViewById(R.id.cost_of_month);
         salaryOfMonth=(TextView)getActivity().findViewById(R.id.salary_of_month);
+        money=(TextView)getActivity().findViewById(R.id.month_rest);
         dateOfMonth=(TextView)getActivity().findViewById(R.id.date_of_month);
         dateOfMonth.setText(dateNow.getYearMonth());
         buttonCancel=getActivity().findViewById(R.id.button_cancel);
@@ -245,6 +267,7 @@ public class MyFrgment2 extends Fragment{
                     month+=1;
                 Log.d("HelloWorld",year+","+month);
                 list=DataSupport.where("user=? and year=? and month=?",User.getNowUserName(),year+"",month+"").find(MyData.class);
+                refreshTextViewValue();
                 String temp=year+","+month;
                 dateOfMonth.setText(temp);
                 mAdapter.notifyDataSetChanged();
@@ -255,7 +278,35 @@ public class MyFrgment2 extends Fragment{
     public void refreshData(String year,String month) //根据年，月刷新数据
     {
         list=DataSupport.where("year=? and month=?",year,month).find(MyData.class);
+        refreshTextViewValue();
         mAdapter.notifyDataSetChanged();;
+    }
+    //刷新TextView上的内容
+    public void refreshTextViewValue()
+    {
+        String cost="0.0";
+        String salary="0.0";
+        if(list==null || list.size()==0)
+        {
+            costOfMonth.setText(cost);
+            salaryOfMonth.setText(salary);
+            money.setText("0.0");
+            return;
+        }
+        for(MyData myData:list)
+        {
+            //当为消费数据时
+            if(myData.getType())
+                cost= MyCalculate.add(cost,myData.getMoney());
+            else
+                salary=MyCalculate.add(salary,myData.getMoney());
+
+        }
+        costOfMonth.setText(cost);
+        salaryOfMonth.setText(salary);
+        money.setText(MyCalculate.sub(salary,cost));
+
+
     }
 
     //menu的获取
@@ -264,9 +315,22 @@ public class MyFrgment2 extends Fragment{
        menu.clear();
        inflater.inflate(R.menu.second_fragment_menu,menu);
     }
-    
 
-     //使用内部类可以方便的获取数据，对外部类的控件直接进行操作
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden)
+        {
+            list=DataSupport.where("user=? and year=? and month=?", User.getNowUserName(),dateNow.getYear()+"",dateNow.getMonth()+""
+            ).find(MyData.class);
+            mAdapter=new MyAdapter();
+            data_show_list.setAdapter(mAdapter);
+            mLinearLayout.setVisibility(View.GONE);
+            isDeleteMode=false;
+        }
+    }
+
+    //使用内部类可以方便的获取数据，对外部类的控件直接进行操作
     class MyAdapter extends BaseAdapter {
 
         private LayoutInflater inflater = null;

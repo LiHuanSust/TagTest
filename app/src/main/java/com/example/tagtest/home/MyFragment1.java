@@ -27,7 +27,7 @@ import java.util.List;
  * Created by MyFirstPC on 2018/3/25.
  */
 
-public class MyFragmet1 extends Fragment implements View.OnClickListener{
+public class MyFragment1 extends Fragment implements View.OnClickListener{
     private List<MyData> list;
     private TextView cost_today;
     private TextView salary_today;
@@ -38,6 +38,7 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
     private String salary="0";
     private GetDate dateNow; //当前时间
     private String userName;//当前用户名
+    private DataAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -49,7 +50,7 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
         //DataSupport方法会返回一个arrayList,它不会为空
         list= DataSupport.where("user=? and year=? and month=? and day=?",userName,dateNow.getYear()+
                 "",dateNow.getMonth()+"",dateNow.getDay()+"").order("id desc").find(MyData.class);
-        DataAdapter adapter=new DataAdapter(getActivity(),R.layout.list_view_basic_show,list);
+        adapter=new DataAdapter(getActivity(),R.layout.list_view_basic_show,list);
         for(MyData temp:list)
         {
             if(temp.getType())
@@ -148,6 +149,19 @@ public class MyFragmet1 extends Fragment implements View.OnClickListener{
             default:
 
         }
-
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        //当已经是隐藏的了
+        //当展示出来
+        if (!hidden) {
+            list = DataSupport.where("user=? and year=? and month=? and day=?", userName, dateNow.getYear() +
+                    "", dateNow.getMonth() + "", dateNow.getDay() + "").order("id desc").find(MyData.class);
+            adapter=new DataAdapter(getActivity(),R.layout.list_view_basic_show,list);
+            data_show_list.setAdapter(adapter);
+        }
+    }
+
 }

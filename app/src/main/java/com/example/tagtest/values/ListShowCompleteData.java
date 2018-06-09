@@ -84,7 +84,8 @@ public class ListShowCompleteData extends AppCompatActivity implements View.OnCl
         {
             typeValue.setText("收入详情");
         }
-        account=DataSupport.find(Account.class,data.getAccountId());
+        //account=DataSupport.find(Account.class,data.getA);
+        account=DataSupport.where("user=? and accountName=?",data.getUser(),data.getAccountName()).findFirst(Account.class);
         accountInformation=account.getAccountInformation();
         Log.d("LisgtShowCompleteData",accountInformation.toString());
         picTextValue.setText(data.getTypeSelect());

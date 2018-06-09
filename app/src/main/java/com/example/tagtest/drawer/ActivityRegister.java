@@ -48,7 +48,8 @@ public class ActivityRegister extends AppCompatActivity{
     private String passWordRepeat="";
     private String answer="";
     private String returnData="";
-    private final static String RegisterURL="http://10.0.2.2:8080/TagTest/RegisterServlet";
+    //private final static String RegisterURL="http://10.0.2.2:8080/TagTest/RegisterServlet";
+    private final static String RegisterURL="http://192.168.43.235:8080/TagTest/RegisterServlet";
     private ProgressDialog progressDialog;
     private Handler handler=new Handler()
     {

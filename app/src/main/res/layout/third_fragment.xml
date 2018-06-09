@@ -7,24 +7,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></View>
         <!---总支出-->
         <TextView
             android:id="@+id/cost_number"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="总支出：0.00"
+            android:text="总支出："
             android:gravity="center_horizontal"
             />
+        <TextView
+            android:id="@+id/account_cost"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></View>
         <!---总预算-->
         <TextView
-            android:id="@+id/budget"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="总预算：0.00"
-            android:gravity="center_horizontal"
+            android:text="总收入："
             />
+        <TextView
+            android:id="@+id/account_salary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0.0"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></View>
 
 
     </LinearLayout>
@@ -33,13 +51,25 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <!---净资产-->
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></View>
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/total"
-            android:text="净资产：0.00"
+            android:text="净资产："
             android:gravity="center_horizontal"
             />
+        <TextView
+            android:id="@+id/account_total"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="0.0"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></View>
     </LinearLayout>
     <ListView
         android:id="@+id/list_view_account"
